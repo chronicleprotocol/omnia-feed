@@ -60,15 +60,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "v1.9.6",
+        "branch": "sc-575-omnia-json-logging-firmatting",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "494cb5d07c3ce5a51587a0064528b20f6579b34f",
-        "sha256": "0cwl4b0jdq4qmi2p9gxay7nhrif6w1bny00vvvw0i11xfdgrivay",
+        "rev": "ad2b318fe160821bf4c69f880a1928eaac83c285",
+        "sha256": "17z8xxmd551kkl03l8myvk26jkjwvkx6mvk1zb7q49d2x89k7c6g",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/494cb5d07c3ce5a51587a0064528b20f6579b34f.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/ad2b318fe160821bf4c69f880a1928eaac83c285.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
