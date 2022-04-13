@@ -60,7 +60,7 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "sc-576",
+        "branch": "v1.10.1",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
