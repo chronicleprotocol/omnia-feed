@@ -27,6 +27,8 @@ export OMNIA_CONFIG="${OMNIA_CONFIG:-/etc/omnia.conf}"
 
 export SPLITTER_PATH=${SPLITTER_PATH:-$(command -v rpc-splitter)}
 export SPLITTER_URLS="${SPLITTER_URLS:-""}"
+export SPLITTER_LOG_FORMAT=${SPLITTER_LOG_FORMAT:-"text"}
+export SPLITTER_LOG_VERBOSITY=${SPLITTER_LOG_VERBOSITY:-"error"}
 
 export LEELOO_PATH=${LEELOO_PATH:-$(command -v leeloo)}
 export LEELOO_CONFIG=${LEELOO_CONFIG:-/etc/leeloo.conf}
