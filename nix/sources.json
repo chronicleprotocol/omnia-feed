@@ -65,10 +65,10 @@
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "f20a0463bbe175c8cd9bece192f1df9946d1d5e6",
-        "sha256": "15qzdgsq7sv86jj85irmh7wf17wsb1pa2ac1yc7xvjbsjnbw9gid",
+        "rev": "2c1be62b969eac179f41a67440167121c7ebccff",
+        "sha256": "08r5v059q97qh2gikfg1ig8as9r737l8p4k7p39llf5c7r792q4b",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/f20a0463bbe175c8cd9bece192f1df9946d1d5e6.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/2c1be62b969eac179f41a67440167121c7ebccff.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
