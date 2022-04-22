@@ -41,10 +41,10 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "9cb7ef336bb71fd1ca84fc7f2dff15ef4b033f2a",
-        "sha256": "1ajyqr8zka1zlb25jx1v4xys3zqmdy3prbm1vxlid6ah27a8qnzh",
+        "rev": "df49d53b71ad5b6b5847b32e5254924d60703c46",
+        "sha256": "1j5p8mi1wi3pdcq0lfb881p97i232si07nb605dl92cjwnira88c",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/9cb7ef336bb71fd1ca84fc7f2dff15ef4b033f2a.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/df49d53b71ad5b6b5847b32e5254924d60703c46.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -72,15 +72,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "master",
+        "branch": "sc-607",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "76de85f0f8d1d7092a42b2377bab30b1fcda2905",
-        "sha256": "1vw3lx8w528msvidqrhl7v5vc39qiqzwc1mwc0cx7hwxzhhpb7s1",
+        "rev": "70296bb7da7bda7ba46f7bce1f5388fd1b3ca5b1",
+        "sha256": "0pfrj68m4jy5viif4il45qxkfk4z8qq4h6l04sfzvxvvmybp6qlv",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/76de85f0f8d1d7092a42b2377bab30b1fcda2905.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/70296bb7da7bda7ba46f7bce1f5388fd1b3ca5b1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
