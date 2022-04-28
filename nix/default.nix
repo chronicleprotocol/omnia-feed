@@ -5,15 +5,16 @@ let
 
   inherit (import sources.nixpkgs {
     overlays = [
-      (self: super: { inherit (import "${sources.dapptools}/overlay.nix" self super) hevm ethsign seth; })
+      (self: super: { inherit (import "${sources.dapptools}/overlay.nix" self super) hevm seth; })
+      (self: super: { ethsign = (self.callPackage (import "${sources.omnia}/ethsign") { }); })
       (self: super: (super // { dapptoolsSrc = ./.; })) # hacky but works - TODO: suggest to daptools to not use it in seth
     ];
   })
     pkgs;
+
   inherit (pkgs.lib.strings) removePrefix;
 
   getName = x: let parse = drv: (builtins.parseDrvName drv).name; in if isString x then parse x else x.pname or (parse x.name);
-
   ssb-patches = ../ssb-server;
 in rec {
   inherit pkgs;
@@ -36,16 +37,13 @@ in rec {
     '';
   };
 
-  oracle-suite = pkgs.callPackage sources.oracle-suite { };
+  oracle-suite = pkgs.callPackage sources.oracle-suite { buildGoModule = (import sources.nixpkgs2 { }).buildGo118Module; };
 
   setzer = pkgs.callPackage sources.setzer { };
 
   stark-cli = pkgs.callPackage ../starkware { };
 
-  omnia = pkgs.callPackage sources.omnia {
-    inherit ssb-server stark-cli oracle-suite;
-    setzer-mcd = setzer;
-  };
+  omnia = pkgs.callPackage sources.omnia { inherit ssb-server stark-cli oracle-suite setzer; };
 
   install-omnia = pkgs.callPackage ../systemd { inherit omnia ssb-server oracle-suite; };
 }
