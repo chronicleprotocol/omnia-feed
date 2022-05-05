@@ -5,10 +5,10 @@
         "homepage": "https://dapp.tools",
         "owner": "dapphub",
         "repo": "dapptools",
-        "rev": "760cc83e183ebf76c8ead9d31b0b5d7200bf9dcb",
-        "sha256": "0cwha00jzlwcmff6xjgy565zgz740jsa2xr1b11q4lr1q9rjw9qn",
+        "rev": "c9562ac38ec908ecbe5fba4c0bf8e69ad8f644d3",
+        "sha256": "0m93v2cqmd9nypsiaik2sj173bj76mx8c55kk56kn7hqakw7zm30",
         "type": "tarball",
-        "url": "https://github.com/dapphub/dapptools/archive/760cc83e183ebf76c8ead9d31b0b5d7200bf9dcb.tar.gz",
+        "url": "https://github.com/dapphub/dapptools/archive/c9562ac38ec908ecbe5fba4c0bf8e69ad8f644d3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "mach-nix": {
@@ -41,10 +41,10 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "9cb7ef336bb71fd1ca84fc7f2dff15ef4b033f2a",
-        "sha256": "1ajyqr8zka1zlb25jx1v4xys3zqmdy3prbm1vxlid6ah27a8qnzh",
+        "rev": "df49d53b71ad5b6b5847b32e5254924d60703c46",
+        "sha256": "1j5p8mi1wi3pdcq0lfb881p97i232si07nb605dl92cjwnira88c",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/9cb7ef336bb71fd1ca84fc7f2dff15ef4b033f2a.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/df49d53b71ad5b6b5847b32e5254924d60703c46.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -59,28 +59,40 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/ee084c02040e864eeeb4cf4f8538d92f7c675671.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixpkgs2": {
+        "branch": "nixpkgs-unstable",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "6766fb6503ae1ebebc2a9704c162b2aef351f921",
+        "sha256": "1a805n9iqlbmffkzq3l6yf2xp74wjaz5pdcp0cfl0rhc179w4lpy",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/6766fb6503ae1ebebc2a9704c162b2aef351f921.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "omnia": {
-        "branch": "v1.10.2",
+        "branch": "v1.10.3",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "ba636427536e08311d1c93ad664fefa5282c099c",
-        "sha256": "0jiwwf458kfpby1bh02xh5545wkz8qamx421ppcibkaa9nn7gzls",
+        "rev": "f10892adf73a62efe2be0b4289199560c3058aea",
+        "sha256": "1sxkfwqmrlam8ljfasr6zz6mr4hl43liy7yq70jpxr8zzg8fa8n4",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/ba636427536e08311d1c93ad664fefa5282c099c.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/f10892adf73a62efe2be0b4289199560c3058aea.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "v0.4.6",
+        "branch": "v0.4.9",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "ab0fb400f731670aba9449960ef25dd05144b929",
-        "sha256": "0ivf0qngmg5xkr7gihm653s0s1dqy77zbss0qykwfzkdkinb0108",
+        "rev": "d4696037d04faa1bb211894d7843c1cb7ec0caf9",
+        "sha256": "1p4v5w1lvc8s2pxijcv72z31h25kpgb1mhk9ra3piyl5plbjmkq1",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/ab0fb400f731670aba9449960ef25dd05144b929.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/d4696037d04faa1bb211894d7843c1cb7ec0caf9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
