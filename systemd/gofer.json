@@ -1,6 +1,8 @@
 {
+  "ethereum": {
+     "rpc": []
+  },
   "gofer": {
-    "ethRpc": "http://127.0.0.1:9989",
     "rpc": {
       "address": "127.0.0.1:8081"
     },

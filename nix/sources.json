@@ -5,10 +5,10 @@
         "homepage": "https://dapp.tools",
         "owner": "dapphub",
         "repo": "dapptools",
-        "rev": "249c8cca1a4806b8bc47882ca7214ab380d29082",
-        "sha256": "0lp9s1l0n6s2jhaccymrp6437cg6brag5cfn5c0nnaycvx1mgrdr",
+        "rev": "c9562ac38ec908ecbe5fba4c0bf8e69ad8f644d3",
+        "sha256": "0m93v2cqmd9nypsiaik2sj173bj76mx8c55kk56kn7hqakw7zm30",
         "type": "tarball",
-        "url": "https://github.com/dapphub/dapptools/archive/249c8cca1a4806b8bc47882ca7214ab380d29082.tar.gz",
+        "url": "https://github.com/dapphub/dapptools/archive/c9562ac38ec908ecbe5fba4c0bf8e69ad8f644d3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "mach-nix": {
@@ -17,10 +17,10 @@
         "homepage": "",
         "owner": "DavHau",
         "repo": "mach-nix",
-        "rev": "b56a541af15efd2062ffb9abb69f63dcceafb64d",
-        "sha256": "0zdifqdq478q938wm3pwdph8xv9ksk9qvf6s3kckchyzw18x28k0",
+        "rev": "c914064c9b8cab9495818ffe8d834d8c2c1d7ce7",
+        "sha256": "1l6x03r4vk1rsgjn87pp9izxr8nki4snmkhyr12cfl532mrm6kx1",
         "type": "tarball",
-        "url": "https://github.com/DavHau/mach-nix/archive/b56a541af15efd2062ffb9abb69f63dcceafb64d.tar.gz",
+        "url": "https://github.com/DavHau/mach-nix/archive/c914064c9b8cab9495818ffe8d834d8c2c1d7ce7.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "makerpkgs": {
@@ -29,10 +29,10 @@
         "homepage": "",
         "owner": "makerdao",
         "repo": "makerpkgs",
-        "rev": "76151418a2d9ffcfa55dec8acda5bde10f504224",
-        "sha256": "0vknhf3n54v6rgvq23rhi3b3lraczn9yzd7cw8i1hdxkb028f34r",
+        "rev": "5a8ee08d811d5b5098533b33177bba58a4e06abc",
+        "sha256": "0k7nq0ikpwxvllshl05hn9r15m29lh50gy5sb9ixc14zlhv2l7nv",
         "type": "tarball",
-        "url": "https://github.com/makerdao/makerpkgs/archive/76151418a2d9ffcfa55dec8acda5bde10f504224.tar.gz",
+        "url": "https://github.com/makerdao/makerpkgs/archive/5a8ee08d811d5b5098533b33177bba58a4e06abc.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
@@ -41,10 +41,10 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "65a61b147f307d24bfd0a5cd56ce7d7b7cc61d2e",
-        "sha256": "17mirpsx5wyw262fpsd6n6m47jcgw8k2bwcp1iwdnrlzy4dhcgqh",
+        "rev": "df49d53b71ad5b6b5847b32e5254924d60703c46",
+        "sha256": "1j5p8mi1wi3pdcq0lfb881p97i232si07nb605dl92cjwnira88c",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/65a61b147f307d24bfd0a5cd56ce7d7b7cc61d2e.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/df49d53b71ad5b6b5847b32e5254924d60703c46.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -59,28 +59,40 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/ee084c02040e864eeeb4cf4f8538d92f7c675671.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixpkgs2": {
+        "branch": "nixpkgs-unstable",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "6766fb6503ae1ebebc2a9704c162b2aef351f921",
+        "sha256": "1a805n9iqlbmffkzq3l6yf2xp74wjaz5pdcp0cfl0rhc179w4lpy",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/6766fb6503ae1ebebc2a9704c162b2aef351f921.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "omnia": {
-        "branch": "v1.9.5",
+        "branch": "v1.10.3",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "dc42f77625b4961cd649623d0bca1ee5a284909c",
-        "sha256": "114d6l5kzxdal7vrpz197gsm05ij20p3ng2qwcdma0hma2hk0w1q",
+        "rev": "f10892adf73a62efe2be0b4289199560c3058aea",
+        "sha256": "1sxkfwqmrlam8ljfasr6zz6mr4hl43liy7yq70jpxr8zzg8fa8n4",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/dc42f77625b4961cd649623d0bca1ee5a284909c.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/f10892adf73a62efe2be0b4289199560c3058aea.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "v0.4.2",
+        "branch": "v0.4.9",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "8102e416cb3bfcf7dc9b8431140770e1b6c1d528",
-        "sha256": "0jspw0cilnn9p7iv217nps33lv8kql9x6jsia5659dppb8lcz2vn",
+        "rev": "d4696037d04faa1bb211894d7843c1cb7ec0caf9",
+        "sha256": "1p4v5w1lvc8s2pxijcv72z31h25kpgb1mhk9ra3piyl5plbjmkq1",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/8102e416cb3bfcf7dc9b8431140770e1b6c1d528.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/d4696037d04faa1bb211894d7843c1cb7ec0caf9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
