@@ -72,27 +72,27 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "sc-639",
+        "branch": "v1.10.3",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "19555900f95b2e55282aac2eefb8bd8dc56d29c8",
-        "sha256": "1zsslp2xfzkz8qfxlda12ja3gl6wdxbyiakvarkw01cgqm5n3mm2",
+        "rev": "f10892adf73a62efe2be0b4289199560c3058aea",
+        "sha256": "1sxkfwqmrlam8ljfasr6zz6mr4hl43liy7yq70jpxr8zzg8fa8n4",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/19555900f95b2e55282aac2eefb8bd8dc56d29c8.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/f10892adf73a62efe2be0b4289199560c3058aea.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "sc-639",
+        "branch": "v0.4.9",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "70394bc41f91c8d7760726922d7a37b6a96af3c1",
-        "sha256": "1mswif3499l7w0z4cyf02wh0ncspb3jjhvnqg5qrzsf4gmb5h5gy",
+        "rev": "d4696037d04faa1bb211894d7843c1cb7ec0caf9",
+        "sha256": "1p4v5w1lvc8s2pxijcv72z31h25kpgb1mhk9ra3piyl5plbjmkq1",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/70394bc41f91c8d7760726922d7a37b6a96af3c1.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/d4696037d04faa1bb211894d7843c1cb7ec0caf9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
