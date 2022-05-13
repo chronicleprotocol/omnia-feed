@@ -1,6 +1,6 @@
 {
   "ethereum": {
-     "rpc": ""
+     "rpc": []
   },
   "gofer": {
     "rpc": {
@@ -228,16 +228,6 @@
           "minimumSuccessfulSources": 3
         }
       },
-      "STETH/ETH": {
-        "method": "median",
-        "sources": [
-          [{ "origin": "curve", "pair": "STETH/ETH" }],
-          [{ "origin": "balancerV2", "pair": "STETH/ETH" }]
-        ],
-        "params": {
-          "minimumSuccessfulSources": 2
-        }
-      },
       "USDC/USD": {
         "method": "median",
         "sources": [
@@ -249,18 +239,14 @@
           "minimumSuccessfulSources": 2
         }
       },
-      "USDT/USD": {
+      "STETH/ETH": {
         "method": "median",
         "sources": [
-          [{ "origin": "binance", "pair": "BTC/USDT" },{ "origin": ".", "pair": "BTC/USD" }],
-          [{ "origin": "okex", "pair": "BTC/USDT" },{ "origin": ".", "pair": "BTC/USD" }],
-          [{ "origin": "bitfinex", "pair": "USDT/USD" }],
-          [{ "origin": "ftx", "pair": "ETH/USDT" },{ "origin": ".", "pair": "ETH/USD" }],
-          [{ "origin": "huobi", "pair": "ETH/USDT" },{ "origin": ".", "pair": "ETH/USD" }],
-          [{ "origin": "kraken", "pair": "USDT/USD" }]
+          [{ "origin": "curve", "pair": "STETH/ETH" }],
+          [{ "origin": "balancerV2", "pair": "STETH/ETH" }]
         ],
         "params": {
-          "minimumSuccessfulSources": 3
+          "minimumSuccessfulSources": 2
         }
       },
       "WSTETH/ETH": {
