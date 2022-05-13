@@ -37,4 +37,4 @@ services:
     <<: *default
     environment:
       <<: *env
-      OMNIA_FILE_SET: /src/omnia/config/relayer-${ETH_NET-mainnet}.conf
+      OMNIA_FILE_SET: /src/omnia/config/relay-${ETH_NET-mainnet}.conf

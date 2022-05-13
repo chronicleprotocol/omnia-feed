@@ -98,8 +98,9 @@ copyOmniaConf() {
 	echo >&2 "OMNIA_CONFIG: START"
 
 	local savedConfig
+
 	if [[ -f "$OMNIA_CONFIG" ]]; then
-		savedConfig="$(jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")"
+		savedConfig="$( jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")"
 	fi
 
 	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
@@ -137,12 +138,12 @@ copySsbConf() {
 	mkdir  -p "$confDir"
 
 	if  [[ -f $SSB_CONF ]]; then
-		updatedConf=$(  jq . "$SSB_CONF")
+		updatedConf=$( jq . "$SSB_CONF")
 	fi
 	[[ -n $updatedConf  ]] || updatedConf=$(jq . "$SHARE_DIR/ssb-config.json")
 
 	for i in  "${!ssbConfigUpdates[@]}"; do
-		updatedConf=$(  jq "${ssbConfigUpdates[$i]}" <<< "$updatedConf")
+		updatedConf=$( jq "${ssbConfigUpdates[$i]}" <<< "$updatedConf")
 	done
 
 	tee  "$SSB_CONF" <<< "$updatedConf" > /dev/null 2>&1
@@ -287,8 +288,8 @@ case "$1" in
 	feed)
 		installType="feed"
 		;;
-	relayer | relay)
-		installType="relayer"
+	relay)
+		installType="relay"
 		;;
 	help | --help | -h)
 		usage
@@ -352,9 +353,9 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 	  --wormhole)
-  			leelooConfigOverrides+=(".leeloo.listeners.wormhole = $2")
-  			shift
-  			;;
+			leelooConfigOverrides+=(".leeloo.listeners.wormhole = $2")
+			shift
+			;;
 		--logger)
 			leelooConfigOverrides+=(".logger = $2")
 			spireConfigOverrides+=(".logger = $2")

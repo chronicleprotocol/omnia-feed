@@ -28,7 +28,7 @@ output=$(
   done | jq -Ss add
 )
 
-# Add feeder addresses to medianizer contracts
+# Add feed addresses to medianizer contracts
 if [[ -n "${toLift[*]}" ]]; then
   for pair in "${pairs[@]}"; do
     address=$(jq -r --arg p $pair '.[$p]' <<<"$output")

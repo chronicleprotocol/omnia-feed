@@ -101,9 +101,9 @@ install-omnia help
 The installed Scuttlebot config can be found in `~/.ssb.config`, more details
 about the [Scuttlebot config](https://github.com/ssbc/ssb-config#configuration).
 
-## Relayer Gas Price configuration
+## Relay Gas Price configuration
 
-Adding a new configuration parameter to `ethereum` relayer config section: `gasPrice`.
+Adding a new configuration parameter to `ethereum` relay config section: `gasPrice`.
 It consist of 3 available options: 
 
 `source` - source of gas price. **Default value: node**
@@ -129,7 +129,7 @@ Available values:
 
 ```json
 {
-  "mode": "relayer",
+  "mode": "relay",
   "ethereum": {
     "from": "0x",
     "keystore": "",
