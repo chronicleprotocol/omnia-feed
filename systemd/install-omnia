@@ -245,7 +245,7 @@ copyGoferConf() {
 		goferConfigUpdates+=(". * {gofer:${_defaultConf}}")
 
 		local _apiKeys
-		_apiKeys="$(jq -c                    '.gofer.origins|to_entries|map({key,value:{params:{apiKey:.value.params.apiKey}}})[]|select(.value.params.apiKey!=null)|[.]|from_entries' <<< "$_goferConfig" | jq -sc add)"
+		_apiKeys="$(jq -c '.gofer.origins|to_entries|map({key,value:{params:{apiKey:.value.params.apiKey}}})[]|select(.value.params.apiKey!=null)|[.]|from_entries' <<< "$_goferConfig" | jq -sc add)"
 		if [[ "$_apiKeys" != "null" ]]; then
 			goferConfigUpdates+=(". * {gofer:{origins:${_apiKeys}}}")
 		fi
@@ -256,6 +256,8 @@ copyGoferConf() {
 			goferConfigUpdates+=(". * {gofer:$_savedData}")
 		fi
 	fi
+
+	goferConfigOverrides+=('.ethereum.rpc = "http://127.0.0.1:9989"')
 
 	for i in  "${!goferConfigUpdates[@]}"; do
 		echo  >&2 "${goferConfigUpdates[$i]}"
@@ -334,7 +336,6 @@ while [[ -n "$1" ]]; do
 			else
 				SPLITTER_URLS="$SPLITTER_URLS,$2"
 			fi
-			goferConfigOverrides+=(".ethereum.rpc += [\"$2\"]")
 			shift
 			;;
 		--from)
@@ -453,7 +454,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--log-verbosity)
-			if    [[ $2 =~ warning|info|debug ]]; then
+			if [[ $2 =~ warning|info|debug ]]; then
 				configOverrides+=(".options.verbose = true")
 			else
 				configOverrides+=(".options.verbose = false")

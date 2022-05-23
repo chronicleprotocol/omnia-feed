@@ -1,6 +1,6 @@
 {
   "ethereum": {
-     "rpc": []
+     "rpc": ""
   },
   "gofer": {
     "rpc": {
