@@ -97,28 +97,26 @@ subst() {
 copyOmniaConf() {
 	echo >&2 "OMNIA_CONFIG: START"
 
-	local  savedFrom
-	local  updatedConf
-
-	if  [[ -f "$OMNIA_CONFIG" ]]; then
-		savedFrom=$(  jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")
+	local savedConfig
+	if [[ -f "$OMNIA_CONFIG" ]]; then
+		savedConfig="$(jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")"
 	fi
 
-	sudo  cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
-	sudo  chmod u+w "$OMNIA_CONFIG"
+	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
+	sudo chmod u+w "$OMNIA_CONFIG"
 
-	if  [[ -n "$savedFrom" ]]; then
-		configUpdates=(". * $savedFrom" "${configUpdates[@]}")
+	if [[ -n "$savedConfig" ]]; then
+		configUpdates=(". * $savedConfig" "${configUpdates[@]}")
 	fi
 
 	configUpdates+=( '.options.logFormat = "text"' )
 	configOverrides+=( '.options.setzerEthRpcUrl = "http://127.0.0.1:9989"' )
 
-	for i in  "${!configUpdates[@]}"; do
-		sudo   tee "$OMNIA_CONFIG" <<< "$(jq "${configUpdates[$i]}" "$OMNIA_CONFIG")" > /dev/null
+	for i in "${!configUpdates[@]}"; do
+		sudo tee "$OMNIA_CONFIG" <<< "$(jq "${configUpdates[$i]}" "$OMNIA_CONFIG")" > /dev/null
 	done
-	for i in  "${!configOverrides[@]}"; do
-		sudo   tee "$OMNIA_CONFIG" <<< "$(jq "${configOverrides[$i]}" "$OMNIA_CONFIG")" > /dev/null
+	for i in "${!configOverrides[@]}"; do
+		sudo tee "$OMNIA_CONFIG" <<< "$(jq "${configOverrides[$i]}" "$OMNIA_CONFIG")" > /dev/null
 	done
 
 	echo >&2 "OMNIA_CONFIG: DONE"
@@ -134,7 +132,6 @@ copySsbConf() {
 	export SSB_GOSSIP="$confDir/gossip.json"
 	export  SSB_CONF="$confDir/config"
 
-	local  savedFrom
 	local  updatedConf
 
 	mkdir  -p "$confDir"
@@ -228,34 +225,18 @@ declare -a leelooConfigOverrides
 copyGoferConf() {
 	echo >&2 "GOFER_CONFIG: START"
 
-	if  [[ ! -f "$GOFER_CONFIG" ]]; then
-		sudo   cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
-		sudo   chmod u+w "$GOFER_CONFIG"
-	else
-		local _goferConfig
-		_goferConfig="$(jq -c '.' < "$GOFER_CONFIG")"
-
-		if [[ "$(jq -cr '.gofer' <<< "$_goferConfig")" == "null" ]]; then
-			echo >&2 "GOFER_CONFIG: A"
-			_goferConfig="$(jq -c '{gofer:.}' < "$GOFER_CONFIG")"
-		fi
-
-		local _defaultConf
-		_defaultConf="$(jq -c '{ethRpc:.gofer.ethRpc,origins:.gofer.origins,priceModels:.gofer.priceModels}|del(..|nulls)' < "$SHARE_DIR/gofer.json")"
-		goferConfigUpdates+=(". * {gofer:${_defaultConf}}")
-
-		local _apiKeys
-		_apiKeys="$(jq -c                    '.gofer.origins|to_entries|map({key,value:{params:{apiKey:.value.params.apiKey}}})[]|select(.value.params.apiKey!=null)|[.]|from_entries' <<< "$_goferConfig" | jq -sc add)"
-		if [[ "$_apiKeys" != "null" ]]; then
-			goferConfigUpdates+=(". * {gofer:{origins:${_apiKeys}}}")
-		fi
-
-		local _savedData
-		_savedData=$(jq -cr '{ethRpc:.gofer.ethRpc}|del(.. | nulls)' <<< "$_goferConfig")
-		if [[ "$_savedData" != "null" ]] && [[ "$_savedData" != "{}" ]]; then
-			goferConfigUpdates+=(". * {gofer:$_savedData}")
-		fi
+	local savedConfig
+	if [[ -f "$GOFER_CONFIG" ]]; then
+		savedConfig="$(jq '{ethereum} | del(.. | nulls)' "$GOFER_CONFIG")"
 	fi
+
+	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
+	sudo chmod u+w "$GOFER_CONFIG"
+
+	if [[ -n "$savedConfig" ]]; then
+		goferConfigOverrides=( ". * $savedConfig" )
+	fi
+	goferConfigOverrides+=('.ethereum.rpc = "http://127.0.0.1:9989"')
 
 	for i in  "${!goferConfigUpdates[@]}"; do
 		echo  >&2 "${goferConfigUpdates[$i]}"
@@ -334,7 +315,6 @@ while [[ -n "$1" ]]; do
 			else
 				SPLITTER_URLS="$SPLITTER_URLS,$2"
 			fi
-			goferConfigOverrides+=(".ethereum.rpc += [\"$2\"]")
 			shift
 			;;
 		--from)
@@ -425,7 +405,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--ssb-caps)
-			ssbConfigUpdates+=(".caps = $(    jq . "$2")")
+			ssbConfigUpdates+=(".caps = $(jq . "$2")")
 			shift
 			;;
 		--ssb-secret)
@@ -453,7 +433,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--log-verbosity)
-			if    [[ $2 =~ warning|info|debug ]]; then
+			if [[ $2 =~ warning|info|debug ]]; then
 				configOverrides+=(".options.verbose = true")
 			else
 				configOverrides+=(".options.verbose = false")
@@ -468,7 +448,7 @@ while [[ -n "$1" ]]; do
 			usage
 			;;
 		*)
-			echo    >&2 "\"$1\" is not a valid option"
+			echo >&2 "\"$1\" is not a valid option"
 			usage
 			;;
 	esac
