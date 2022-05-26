@@ -227,7 +227,7 @@ copyGoferConf() {
 
 	local savedConfig
 	if [[ -f "$GOFER_CONFIG" ]]; then
-		savedConfig="$(jq '{ethereum} | del(.. | nulls)' "$GOFER_CONFIG")"
+		savedConfig="$(jq '{ethereum,gofer:{origins:{openexchangerates:{params:{apiKey:.gofer.origins.openexchangerates.params.apiKey}}}}} | del(.. | nulls)' "$GOFER_CONFIG")"
 	fi
 
 	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
