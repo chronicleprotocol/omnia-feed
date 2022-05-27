@@ -13,7 +13,7 @@ export SSB_PATH=${SSB_PATH:-$(command -v ssb-server)}
 export SSB_CONF=${SSB_CONF:-$(dirname "$(command -v ssb-server)")/.ssb/config}
 
 export GOFER_PATH=${GOFER_PATH:-$(command -v gofer)}
-export GOFER_CONFIG=${GOFER_CONFIG:-/etc/gofer.json}
+export GOFER_CONFIG=${GOFER_CONFIG:-/etc/gofer.conf}
 export GOFER_LOG_FORMAT=${GOFER_LOG_FORMAT:-"text"}
 export GOFER_LOG_VERBOSITY=${GOFER_LOG_VERBOSITY:-"error"}
 
@@ -97,28 +97,26 @@ subst() {
 copyOmniaConf() {
 	echo >&2 "OMNIA_CONFIG: START"
 
-	local  savedFrom
-	local  updatedConf
-
-	if  [[ -f "$OMNIA_CONFIG" ]]; then
-		savedFrom=$(  jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")
+	local savedConfig
+	if [[ -f "$OMNIA_CONFIG" ]]; then
+		savedConfig="$(jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")"
 	fi
 
-	sudo  cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
-	sudo  chmod u+w "$OMNIA_CONFIG"
+	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
+	sudo chmod u+w "$OMNIA_CONFIG"
 
-	if  [[ -n "$savedFrom" ]]; then
-		configUpdates=(". * $savedFrom" "${configUpdates[@]}")
+	if [[ -n "$savedConfig" ]]; then
+		configUpdates=(". * $savedConfig" "${configUpdates[@]}")
 	fi
 
 	configUpdates+=( '.options.logFormat = "text"' )
 	configOverrides+=( '.options.setzerEthRpcUrl = "http://127.0.0.1:9989"' )
 
-	for i in  "${!configUpdates[@]}"; do
-		sudo   tee "$OMNIA_CONFIG" <<< "$(jq "${configUpdates[$i]}" "$OMNIA_CONFIG")" > /dev/null
+	for i in "${!configUpdates[@]}"; do
+		sudo tee "$OMNIA_CONFIG" <<< "$(jq "${configUpdates[$i]}" "$OMNIA_CONFIG")" > /dev/null
 	done
-	for i in  "${!configOverrides[@]}"; do
-		sudo   tee "$OMNIA_CONFIG" <<< "$(jq "${configOverrides[$i]}" "$OMNIA_CONFIG")" > /dev/null
+	for i in "${!configOverrides[@]}"; do
+		sudo tee "$OMNIA_CONFIG" <<< "$(jq "${configOverrides[$i]}" "$OMNIA_CONFIG")" > /dev/null
 	done
 
 	echo >&2 "OMNIA_CONFIG: DONE"
@@ -134,7 +132,6 @@ copySsbConf() {
 	export SSB_GOSSIP="$confDir/gossip.json"
 	export  SSB_CONF="$confDir/config"
 
-	local  savedFrom
 	local  updatedConf
 
 	mkdir  -p "$confDir"
@@ -172,26 +169,30 @@ mapfile -t ssbConfigUpdates < <(grep -v "^ *#\|^ *$" "$SHARE_DIR/ssb-config-upda
 copySpireConf() {
 	echo >&2 "SPIRE_CONFIG: START"
 
-	if  [[ ! -f "$SPIRE_CONFIG" ]]; then
-		sudo   cp -v "$SHARE_DIR/spire.json" "$SPIRE_CONFIG" >&2
-		sudo   chmod u+w "$SPIRE_CONFIG"
-	else
-		if [[ "$(jq -cr '.spire' < "$SPIRE_CONFIG")" == "null" ]]; then
-			spireConfigUpdates+=("{ethereum,feeds,spire:{rpc,pairs},transport:{libp2p}}")
-		fi
-
-		local _defaultConf
-		_defaultConf=$(jq -c '{feeds,spire:{pairs:.spire.pairs}}' "$SHARE_DIR/spire.json")
-		spireConfigUpdates+=(". * ${_defaultConf}")
+	if [[ -f "${SPIRE_CONFIG%.conf}.json" ]]
+	then
+		sudo mv -f "${SPIRE_CONFIG%.conf}.json" "$SPIRE_CONFIG"
 	fi
 
-	for i in  "${!spireConfigUpdates[@]}"; do
-		echo  >&2 "${spireConfigUpdates[$i]}"
-		sudo   tee "$SPIRE_CONFIG" <<< "$(jq -c "${spireConfigUpdates[$i]}" "$SPIRE_CONFIG")" > /dev/null
+	local savedConfig
+	if [[ -f "$SPIRE_CONFIG" ]]; then
+		savedConfig="$(jq '{ethereum} | del(.. | nulls)' "$SPIRE_CONFIG")"
+	fi
+
+	sudo cp -v "$SHARE_DIR/spire.json" "$SPIRE_CONFIG" >&2
+	sudo chmod u+w "$SPIRE_CONFIG"
+
+	if [[ -n "$savedConfig" ]]; then
+		spireConfigOverrides=( ". * $savedConfig" )
+	fi
+
+	for i in "${!spireConfigUpdates[@]}"; do
+		echo >&2 "${spireConfigUpdates[$i]}"
+		sudo tee "$SPIRE_CONFIG" <<<"$(jq -c "${spireConfigUpdates[$i]}" "$SPIRE_CONFIG")" > /dev/null
 	done
-	for i in  "${!spireConfigOverrides[@]}"; do
-		echo  >&2 "${spireConfigOverrides[$i]}"
-		sudo   tee "$SPIRE_CONFIG" <<< "$(jq -c "${spireConfigOverrides[$i]}" "$SPIRE_CONFIG")" > /dev/null
+	for i in "${!spireConfigOverrides[@]}"; do
+		echo >&2 "${spireConfigOverrides[$i]}"
+		sudo tee "$SPIRE_CONFIG" <<<"$(jq -c "${spireConfigOverrides[$i]}" "$SPIRE_CONFIG")" > /dev/null
 	done
 
 	echo >&2 "SPIRE_CONFIG: DONE"
@@ -202,22 +203,27 @@ declare -a spireConfigOverrides
 copyLeelooConf() {
 	echo >&2 "LEELOO_CONFIG: START"
 
-	if  [[ ! -f "$LEELOO_CONFIG" ]]; then
-		sudo   cp -v "$SHARE_DIR/leeloo.json" "$LEELOO_CONFIG" >&2
-		sudo   chmod u+w "$LEELOO_CONFIG"
+	if [[ -f "${LEELOO_CONFIG%.conf}.json" ]]
+	then
+		sudo mv -f "${LEELOO_CONFIG%.conf}.json" "$LEELOO_CONFIG"
+	fi
+
+	if [[ ! -f "$LEELOO_CONFIG" ]]; then
+		sudo cp -v "$SHARE_DIR/leeloo.json" "$LEELOO_CONFIG" >&2
+		sudo chmod u+w "$LEELOO_CONFIG"
 	else
 		local _defaultConf
 		_defaultConf=$(jq -c '{feeds,leeloo:{pairs:.leeloo.pairs},transport,ethereum}' "$SHARE_DIR/leeloo.json")
 		leelooConfigUpdates+=(". * ${_defaultConf}")
 	fi
 
-	for i in  "${!leelooConfigUpdates[@]}"; do
-		echo  >&2 "${leelooConfigUpdates[$i]}"
-		sudo   tee "$LEELOO_CONFIG" <<< "$(jq -c "${leelooConfigUpdates[$i]}" "$LEELOO_CONFIG")" > /dev/null
+	for i in "${!leelooConfigUpdates[@]}"; do
+		echo >&2 "${leelooConfigUpdates[$i]}"
+		sudo tee "$LEELOO_CONFIG" <<< "$(jq -c "${leelooConfigUpdates[$i]}" "$LEELOO_CONFIG")" > /dev/null
 	done
-	for i in  "${!leelooConfigOverrides[@]}"; do
-		echo  >&2 "${leelooConfigOverrides[$i]}"
-		sudo   tee "$LEELOO_CONFIG" <<< "$(jq -c "${leelooConfigOverrides[$i]}" "$LEELOO_CONFIG")" > /dev/null
+	for i in "${!leelooConfigOverrides[@]}"; do
+		echo >&2 "${leelooConfigOverrides[$i]}"
+		sudo tee "$LEELOO_CONFIG" <<< "$(jq -c "${leelooConfigOverrides[$i]}" "$LEELOO_CONFIG")" > /dev/null
 	done
 
 	echo >&2 "LEELOO_CONFIG: DONE"
@@ -228,42 +234,31 @@ declare -a leelooConfigOverrides
 copyGoferConf() {
 	echo >&2 "GOFER_CONFIG: START"
 
-	if  [[ ! -f "$GOFER_CONFIG" ]]; then
-		sudo   cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
-		sudo   chmod u+w "$GOFER_CONFIG"
-	else
-		local _goferConfig
-		_goferConfig="$(jq -c '.' < "$GOFER_CONFIG")"
-
-		if [[ "$(jq -cr '.gofer' <<< "$_goferConfig")" == "null" ]]; then
-			echo >&2 "GOFER_CONFIG: A"
-			_goferConfig="$(jq -c '{gofer:.}' < "$GOFER_CONFIG")"
-		fi
-
-		local _defaultConf
-		_defaultConf="$(jq -c '{ethRpc:.gofer.ethRpc,origins:.gofer.origins,priceModels:.gofer.priceModels}|del(..|nulls)' < "$SHARE_DIR/gofer.json")"
-		goferConfigUpdates+=(". * {gofer:${_defaultConf}}")
-
-		local _apiKeys
-		_apiKeys="$(jq -c                    '.gofer.origins|to_entries|map({key,value:{params:{apiKey:.value.params.apiKey}}})[]|select(.value.params.apiKey!=null)|[.]|from_entries' <<< "$_goferConfig" | jq -sc add)"
-		if [[ "$_apiKeys" != "null" ]]; then
-			goferConfigUpdates+=(". * {gofer:{origins:${_apiKeys}}}")
-		fi
-
-		local _savedData
-		_savedData=$(jq -cr '{ethRpc:.gofer.ethRpc}|del(.. | nulls)' <<< "$_goferConfig")
-		if [[ "$_savedData" != "null" ]] && [[ "$_savedData" != "{}" ]]; then
-			goferConfigUpdates+=(". * {gofer:$_savedData}")
-		fi
+	if [[ -f "${GOFER_CONFIG%.conf}.json" ]]
+	then
+		sudo mv -f "${GOFER_CONFIG%.conf}.json" "$GOFER_CONFIG"
 	fi
 
-	for i in  "${!goferConfigUpdates[@]}"; do
-		echo  >&2 "${goferConfigUpdates[$i]}"
-		sudo   tee "$GOFER_CONFIG" <<< "$(jq "${goferConfigUpdates[$i]}" "$GOFER_CONFIG")" > /dev/null
+	local savedConfig
+	if [[ -f "$GOFER_CONFIG" ]]; then
+		savedConfig="$(jq '{ethereum,gofer:{origins:{openexchangerates:{params:{apiKey:.gofer.origins.openexchangerates.params.apiKey}}}}} | del(.. | nulls)' "$GOFER_CONFIG")"
+	fi
+
+	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
+	sudo chmod u+w "$GOFER_CONFIG"
+
+	if [[ -n "$savedConfig" ]]; then
+		goferConfigOverrides=( ". * $savedConfig" )
+	fi
+	goferConfigOverrides+=('.ethereum.rpc = "http://127.0.0.1:9989"')
+
+	for i in "${!goferConfigUpdates[@]}"; do
+		echo >&2 "${goferConfigUpdates[$i]}"
+		sudo tee "$GOFER_CONFIG" <<< "$(jq "${goferConfigUpdates[$i]}" "$GOFER_CONFIG")" > /dev/null
 	done
-	for i in  "${!goferConfigOverrides[@]}"; do
-		echo  >&2 "${goferConfigOverrides[$i]}"
-		sudo   tee "$GOFER_CONFIG" <<< "$(jq "${goferConfigOverrides[$i]}" "$GOFER_CONFIG")" > /dev/null
+	for i in "${!goferConfigOverrides[@]}"; do
+		echo >&2 "${goferConfigOverrides[$i]}"
+		sudo tee "$GOFER_CONFIG" <<< "$(jq "${goferConfigOverrides[$i]}" "$GOFER_CONFIG")" > /dev/null
 	done
 
 	echo >&2 "GOFER_CONFIG: DONE"
@@ -272,7 +267,7 @@ declare -a goferConfigUpdates
 declare -a goferConfigOverrides
 
 installConfigs() {
-	copyOmniaConf  "$installType.conf"
+	copyOmniaConf "$installType.conf"
 	copySsbConf
 	copySpireConf
 	copyGoferConf
@@ -280,12 +275,12 @@ installConfigs() {
 }
 
 installServices() {
-	subst  spire-agent "$SHARE_DIR"/spire-agent.service
-	subst  leeloo-agent "$SHARE_DIR"/leeloo-agent.service
-	subst  gofer-agent "$SHARE_DIR"/gofer-agent.service
-	subst  splitter-agent "$SHARE_DIR"/splitter-agent.service
-	subst  ssb-server "$SHARE_DIR"/ssb-server.service
-	subst  omnia "$SHARE_DIR"/omnia.service
+	subst spire-agent "$SHARE_DIR"/spire-agent.service
+	subst leeloo-agent "$SHARE_DIR"/leeloo-agent.service
+	subst gofer-agent "$SHARE_DIR"/gofer-agent.service
+	subst splitter-agent "$SHARE_DIR"/splitter-agent.service
+	subst ssb-server "$SHARE_DIR"/ssb-server.service
+	subst omnia "$SHARE_DIR"/omnia.service
 }
 
 case "$1" in
@@ -334,7 +329,6 @@ while [[ -n "$1" ]]; do
 			else
 				SPLITTER_URLS="$SPLITTER_URLS,$2"
 			fi
-			goferConfigOverrides+=(".ethereum.rpc += [\"$2\"]")
 			shift
 			;;
 		--from)
@@ -425,7 +419,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--ssb-caps)
-			ssbConfigUpdates+=(".caps = $(    jq . "$2")")
+			ssbConfigUpdates+=(".caps = $(jq . "$2")")
 			shift
 			;;
 		--ssb-secret)
@@ -453,7 +447,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--log-verbosity)
-			if    [[ $2 =~ warning|info|debug ]]; then
+			if [[ $2 =~ warning|info|debug ]]; then
 				configOverrides+=(".options.verbose = true")
 			else
 				configOverrides+=(".options.verbose = false")
@@ -468,7 +462,7 @@ while [[ -n "$1" ]]; do
 			usage
 			;;
 		*)
-			echo    >&2 "\"$1\" is not a valid option"
+			echo >&2 "\"$1\" is not a valid option"
 			usage
 			;;
 	esac
