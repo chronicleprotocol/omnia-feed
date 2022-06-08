@@ -7,7 +7,7 @@ let
   # List of relays, these addresses will be able to connect to the RPC api
   relayerKeys = [ "relay" ];
   # List of contracts to deploy
-  pairs = [ "BATUSD" "BTCUSD" "ETHUSD" "KNCUSD" "MANAUSD" ];
+  pairs = [ "BATUSD" "BTCUSD" "ETHUSD" "MANAUSD" ];
 
   makerPkgs =
     import (builtins.fetchTarball "https://github.com/makerdao/makerpkgs/tarball/4d71760d27e88e244f9b5fe4d064b4c207b9b92d") {
