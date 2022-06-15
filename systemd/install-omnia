@@ -36,7 +36,7 @@ export LEELOO_LOG_FORMAT=${LEELOO_LOG_FORMAT:-"text"}
 export LEELOO_LOG_VERBOSITY=${LEELOO_LOG_VERBOSITY:-"error"}
 
 usage() {
-	cat  >&2 << EOF
+	cat >&2 << EOF
 Usage: install-omnia COMMAND OPTIONS...
 
 Commands:
@@ -54,42 +54,42 @@ Options:
   --ssb-secret   SECRET_FILE      Install Scuttlebot secret
   --ssb-gossip   GOSSIP_JSON_FILE Install Scuttlbot gossip.json file
 EOF
-	exit  1
+	exit 1
 }
 
 subst() {
-	local  name
+	local name
 	name="$1.service"
-	local  target
+	local target
 	target="$TARGET_DIR"/"$name"
-	local  restart
-	restart=$(               if [[ -e "$target" ]]; then echo 1; fi)
+	local restart
+	restart=$(if [[ -e "$target" ]]; then echo 1; fi)
 
 	# shellcheck disable=SC2016
-	envsubst  '
-    $USER
-    $SSB_PATH $SSB_CONF $SSB_CAPS $SSB_KEYS $SSB_PORT $SSB_HOST
-    $OMNIA_PATH $OMNIA_CONFIG
-    $GOFER_PATH $GOFER_CONFIG
-    $GOFER_LOG_VERBOSITY $GOFER_LOG_FORMAT
-    $SPIRE_PATH $SPIRE_CONFIG
-    $SPIRE_LOG_VERBOSITY $SPIRE_LOG_FORMAT
-    $LEELOO_PATH $LEELOO_CONFIG
-    $LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
-    $SPLITTER_PATH $SPLITTER_URLS
-    $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
+	envsubst '
+$USER
+$SSB_PATH $SSB_CONF $SSB_CAPS $SSB_KEYS $SSB_PORT $SSB_HOST
+$OMNIA_PATH $OMNIA_CONFIG
+$GOFER_PATH $GOFER_CONFIG
+$GOFER_LOG_VERBOSITY $GOFER_LOG_FORMAT
+$SPIRE_PATH $SPIRE_CONFIG
+$SPIRE_LOG_VERBOSITY $SPIRE_LOG_FORMAT
+$LEELOO_PATH $LEELOO_CONFIG
+$LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
+$SPLITTER_PATH $SPLITTER_URLS
+$SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
 ' < "$2" \
-		  | sudo tee "$target" > /dev/null
+		| sudo tee "$target" > /dev/null
 
-	echo  >&2 "$name -> $target"
+	echo>&2 "$name -> $target"
 
-	systemdCmd+="systemctl enable $name   # Enable auto-start of $1 service at boot
+	systemdCmd+="systemctl enable $name # Enable auto-start of $1 service at boot
 "
-	if  [[ -n "$restart" ]]; then
-		systemdCmd+="systemctl restart $name  # Restart $1 service now
+	if [[ -n "$restart" ]]; then
+		systemdCmd+="systemctl restart $name # Restart $1 service now
 "
 	else
-		systemdCmd+="systemctl start $name    # Start $1 service now
+		systemdCmd+="systemctl start $name # Start $1 service now
 "
 	fi
 }
@@ -98,8 +98,9 @@ copyOmniaConf() {
 	echo >&2 "OMNIA_CONFIG: START"
 
 	local savedConfig
+
 	if [[ -f "$OMNIA_CONFIG" ]]; then
-		savedConfig="$(jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")"
+		savedConfig="$( jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")"
 	fi
 
 	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
@@ -127,39 +128,39 @@ declare -a configOverrides
 copySsbConf() {
 	echo >&2 "SSB_CONF: START"
 
-	local  confDir="$HOME/.ssb"
+	local confDir="$HOME/.ssb"
 	export SSB_KEYS="$confDir/secret"
 	export SSB_GOSSIP="$confDir/gossip.json"
-	export  SSB_CONF="$confDir/config"
+	export SSB_CONF="$confDir/config"
 
-	local  updatedConf
+	local updatedConf
 
-	mkdir  -p "$confDir"
+	mkdir -p "$confDir"
 
-	if  [[ -f $SSB_CONF ]]; then
-		updatedConf=$(  jq . "$SSB_CONF")
+	if [[ -f $SSB_CONF ]]; then
+		updatedConf=$( jq . "$SSB_CONF")
 	fi
-	[[ -n $updatedConf  ]] || updatedConf=$(jq . "$SHARE_DIR/ssb-config.json")
+	[[ -n $updatedConf ]] || updatedConf=$(jq . "$SHARE_DIR/ssb-config.json")
 
-	for i in  "${!ssbConfigUpdates[@]}"; do
-		updatedConf=$(  jq "${ssbConfigUpdates[$i]}" <<< "$updatedConf")
+	for i in "${!ssbConfigUpdates[@]}"; do
+		updatedConf=$( jq "${ssbConfigUpdates[$i]}" <<< "$updatedConf")
 	done
 
-	tee  "$SSB_CONF" <<< "$updatedConf" > /dev/null 2>&1
+	tee "$SSB_CONF" <<< "$updatedConf" > /dev/null 2>&1
 
-	export  SSB_HOST
+	export SSB_HOST
 	SSB_HOST="$(jq -cr '.connections.incoming["net"][].host | select(.!= null) // "localhost"' <<< "$updatedConf")"
-	export  SSB_PORT
+	export SSB_PORT
 	SSB_PORT="$(jq -cr '.connections.incoming["net"][].port | select(.!= null) // 8007' <<< "$updatedConf")"
 
-	if  [[ -n "$installSsbSecret" ]]; then
-		cp   -iv "$installSsbSecret" "$SSB_KEYS"
-		chmod   0600 "$SSB_KEYS"
+	if [[ -n "$installSsbSecret" ]]; then
+		cp -iv "$installSsbSecret" "$SSB_KEYS"
+		chmod 0600 "$SSB_KEYS"
 	fi
 
-	if  [[ -n "$installSsbGossip" ]]; then
-		cp   -iv "$installSsbGossip" "$SSB_GOSSIP"
-		chmod   0600 "$SSB_GOSSIP"
+	if [[ -n "$installSsbGossip" ]]; then
+		cp -iv "$installSsbGossip" "$SSB_GOSSIP"
+		chmod 0600 "$SSB_GOSSIP"
 	fi
 
 	echo >&2 "SSB_CONF: DONE"
@@ -287,14 +288,14 @@ case "$1" in
 	feed)
 		installType="feed"
 		;;
-	relayer | relay)
-		installType="relayer"
+	relay)
+		installType="relay"
 		;;
 	help | --help | -h)
 		usage
 		;;
 	*)
-		echo   >&2 "\"$1\" is not a valid command"
+		echo >&2 "\"$1\" is not a valid command"
 		usage
 		;;
 esac
@@ -351,10 +352,10 @@ while [[ -n "$1" ]]; do
 			leelooConfigOverrides+=(".ethereum.password = \"$2\"")
 			shift
 			;;
-	  --wormhole)
-  			leelooConfigOverrides+=(".leeloo.listeners.wormhole = $2")
-  			shift
-  			;;
+		--wormhole)
+			leelooConfigOverrides+=(".leeloo.listeners.wormhole = $2")
+			shift
+			;;
 		--logger)
 			leelooConfigOverrides+=(".logger = $2")
 			spireConfigOverrides+=(".logger = $2")
@@ -474,5 +475,5 @@ installConfigs
 installServices
 
 echo >&2 "To (re)start Omnia now (and auto-start on reboot) run:"
-echo     "systemctl daemon-reload  # Reload systemd services"
-echo -n  "$systemdCmd"
+echo "systemctl daemon-reload # Reload systemd services"
+echo -n "$systemdCmd"

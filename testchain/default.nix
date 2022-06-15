@@ -1,18 +1,27 @@
-{ pkgs ? import <nixpkgs> {}}:
+{ pkgs ? import <nixpkgs> { } }:
 let
   # Address used for the genesis block
   genesisKey = "genesis";
   # List of feeders, these addresses are allowed to send pricees
-  feedersKeys = ["feeder"];
-  # List of relayers, these addresses will be able to connect to the RPC api
-  relayerKeys = ["relayer"];
+  feedersKeys = [ "feed" ];
+  # List of relays, these addresses will be able to connect to the RPC api
+  relayerKeys = [ "relay" ];
   # List of contracts to deploy
-  pairs = ["BATUSD" "BTCUSD" "ETHUSD" "KNCUSD" "MANAUSD"];
+  pairs = [ "BATUSD" "BTCUSD" "ETHUSD" "KNCUSD" "MANAUSD" ];
 
-  makerPkgs = import (builtins.fetchTarball "https://github.com/makerdao/makerpkgs/tarball/4d71760d27e88e244f9b5fe4d064b4c207b9b92d") { inherit pkgs; };
+  makerPkgs =
+    import (builtins.fetchTarball "https://github.com/makerdao/makerpkgs/tarball/4d71760d27e88e244f9b5fe4d064b4c207b9b92d") {
+      inherit pkgs;
+    };
   keystore = import ./keystore.nix { pkgs = makerPkgs; };
   medianDeploy = import ./median-deploy.nix { pkgs = makerPkgs; };
-  gethTestchain = import ./geth-testchain.nix { pkgs = makerPkgs; keystore = keystore; genesisKey = genesisKey; unlockKeys = relayerKeys; allocKeys = feedersKeys ++ relayerKeys; };
+  gethTestchain = import ./geth-testchain.nix {
+    pkgs = makerPkgs;
+    keystore = keystore;
+    genesisKey = genesisKey;
+    unlockKeys = relayKeys;
+    allocKeys = feedKeys ++ relayKeys;
+  };
 
   medianDeployerBin = pkgs.writeShellScript "median-deployer" ''
     # Run go-ethereum in background
@@ -26,7 +35,9 @@ let
     export ETH_PASSWORD=${keystore.passwordFile}
 
     # Deploy medianizer contracts
-    ${medianDeploy}/bin/median-deploy ${builtins.concatStringsSep " " pairs} ${builtins.concatStringsSep " " (map (x: "0x" + (keystore.address x)) feedersKeys)} > $OUTPUT
+    ${medianDeploy}/bin/median-deploy ${builtins.concatStringsSep " " pairs} ${
+      builtins.concatStringsSep " " (map (x: "0x" + (keystore.address x)) feedersKeys)
+    } > $OUTPUT
 
     # Stop go-ethereum process
     kill "$pid"
@@ -40,10 +51,7 @@ in pkgs.stdenv.mkDerivation {
 
   unpackPhase = "true";
 
-  buildInputs = [
-    medianDeploy
-    gethTestchain
-  ];
+  buildInputs = [ medianDeploy gethTestchain ];
 
   installPhase = ''
     mkdir -p $out/bin

@@ -21,7 +21,7 @@ install_feed() {
     | sudo sh
 }
 
-install_relayer() {
+install_relay() {
   # Start geth testnet
   rm -rf "$HOME/.dapp/testnet"
   nohup >/dev/null 2>&1 \
@@ -98,8 +98,8 @@ assert "SSB create invite" \
 
 note <<<"INSTALL RELAY"
 
-relayer_start=$(date +"%F %T")
-assert "Install relay" run install_relayer
+relay_start=$(date +"%F %T")
+assert "Install relay" run install_relay
 
 assert "Scuttlebot config installed" \
   test -f $HOME/.ssb/config
@@ -119,7 +119,7 @@ assert "Omnia relay config installed" \
 
 cat /etc/omnia.conf > $wdir/output
 assert "Mode is relay" \
-  json .mode <<<'"relayer"'
+  json .mode <<<'"relay"'
 assert "Ethereum from address not overwritten" \
   json .ethereum.from <<<"\"$from_addr\""
 assert "Ethereum keystore not overwritten" \
@@ -139,9 +139,9 @@ assert "Scuttlebot service is active" \
 sleep 5
 
 assert "Omnia relay service is up" \
-  match "INITIALIZATION COMPLETE" < <(capture journalctl --since "$relayer_start" -u omnia)
+  match "INITIALIZATION COMPLETE" < <(capture journalctl --since "$relay_start" -u omnia)
 assert "Scuttlebot service is up" \
-  match "my key ID:" < <(capture journalctl --since "$relayer_start" -u ssb-server)
+  match "my key ID:" < <(capture journalctl --since "$relay_start" -u ssb-server)
 
 assert "SSB create invite" \
   match '^"example-2.org:8007:' < <(capture ssb-server invite.create 1)

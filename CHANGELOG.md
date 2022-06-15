@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Support for configurable external gas price sources for relayers.
+- Support for configurable external gas price sources for relays.
 ### Changed
 - Logging to enable JSON format
 
