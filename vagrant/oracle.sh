@@ -71,13 +71,13 @@ if [[ "$1" == "configure" ]]; then
 				opts+=(--no-source --add-source "gofer")
 				;;
 			--spire)
-				opts+=(--no-transport --add-transport "transport-spire")
+				opts+=(--no-transport --add-transport "spire")
 				;;
 			--ssb)
-				opts+=(--no-transport --add-transport "transport-ssb" --add-transport "transport-ssb-rpc")
+				opts+=(--no-transport --add-transport "ssb" --add-transport "ssb-rpc")
 				;;
 			--ssb-rpc)
-				opts+=(--no-transport --add-transport "transport-ssb-rpc")
+				opts+=(--no-transport --add-transport "ssb-rpc")
 				;;
 			--restart)
 				_restart="true"
