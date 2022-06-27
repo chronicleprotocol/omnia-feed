@@ -72,27 +72,27 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "sc-772-reth-initial-goerli-deployment",
+        "branch": "v1.11.0",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "d579896382ae081e66772dab66bcca6886f313e1",
-        "sha256": "1rlqk4pg54yykqq9clx860i4c6jfq5yas8h7qw5rkc0hmbf2akp1",
+        "rev": "f111e5a0504a119c9cc67e42af897bd12517c665",
+        "sha256": "13nvgg39hcvynibqxhim5vwgbk9wkb336haxljccr7a7vqgbwqg6",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/d579896382ae081e66772dab66bcca6886f313e1.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/f111e5a0504a119c9cc67e42af897bd12517c665.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "sc-767-reth-gofer-support",
+        "branch": "v0.5.0",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "60f5ae88b2ecfc8eacb4f6335f1e6dff2de61333",
-        "sha256": "17h0hddwpnw9757sw2ziykdrqcjblqy5x7xcl2l47r07ayrdnlcm",
+        "rev": "b65745f42b2416ced04ee9d9f325bc130a2debcd",
+        "sha256": "1jsxfahysw4byfj1z4a0xk9v3iib8i2ivcv2mz13xvj4m4ay365x",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/60f5ae88b2ecfc8eacb4f6335f1e6dff2de61333.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/b65745f42b2416ced04ee9d9f325bc130a2debcd.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
