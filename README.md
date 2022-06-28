@@ -28,7 +28,6 @@ Relays monitor the gossiped messages, check for liveness, and homogenize the pri
       BTCUSD = 0xf8A9Faa25186B14EbF02e7Cd16e39152b85aEEcd
       ETHBTC = 0x0E30F0FC91FDbc4594b1e2E5d64E6F1f94cAB23D
       ETHUSD = 0x0E30F0FC91FDbc4594b1e2E5d64E6F1f94cAB23D
-      KNCUSD = 0x4C511ae3FFD63c0DE35D4A138Ff2b584FF450466
       ZRXUSD = 0x1A6b4f516d61c73f568ff0Da15891e670eBc1afb
 
 ## [Live Mainnet Oracles]
@@ -36,7 +35,6 @@ Relays monitor the gossiped messages, check for liveness, and homogenize the pri
       BTCUSD = 0xe0F30cb149fAADC7247E953746Be9BbBB6B5751f
       ETHBTC = 0x81A679f98b63B3dDf2F17CB5619f4d6775b3c5ED
       ETHUSD = 0x64DE91F5A373Cd4c28de3600cB34C7C6cE410C85
-      KNCUSD = 0x83076a2F42dc1925537165045c9FDe9A4B71AD97
       ZRXUSD = 0x956ecD6a9A9A0d84e8eB4e6BaaC09329E202E55e
 
 ## Query Oracle Contracts
