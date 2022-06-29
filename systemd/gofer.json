@@ -120,8 +120,12 @@
         "type": "balancerV2",
         "name": "balancerV2",
         "params": {
+          "symbolAliases": {
+            "ETH": "WETH"
+          },
           "contracts": {
-            "STETH/ETH": "0x32296969ef14eb0c6d29669c550d4a0449130230"
+            "STETH/ETH": "0x32296969ef14eb0c6d29669c550d4a0449130230",
+            "WETH/YFI": "0x186084ff790c65088ba694df11758fae4943ee9e"
           }
         }
       },
@@ -294,13 +298,13 @@
       "YFI/USD": {
         "method": "median",
         "sources": [
+          [{ "origin": "balancerV2", "pair": "YFI/ETH" },{ "origin": ".", "pair": "ETH/USD" }],
+          [{ "origin": "sushiswap", "pair": "YFI/ETH" },{ "origin": ".", "pair": "ETH/USD" }],
           [{ "origin": "binance", "pair": "YFI/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
           [{ "origin": "okx", "pair": "YFI/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
           [{ "origin": "coinbasepro", "pair": "YFI/USD" }],
           [{ "origin": "ftx", "pair": "YFI/USD" }],
-          [{ "origin": "kraken", "pair": "YFI/USD" }],
-          [{ "origin": "uniswapV3", "pair": "YFI/ETH" },{ "origin": ".", "pair": "ETH/USD" }],
-          [{ "origin": "sushiswap", "pair": "YFI/WETH" },{ "origin": ".", "pair": "ETH/USD" }]
+          [{ "origin": "kraken", "pair": "YFI/USD" }]
         ],
         "params": {
           "minimumSuccessfulSources": 2
