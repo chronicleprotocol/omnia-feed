@@ -10,7 +10,8 @@
       "binance_us": {
         "type": "binance",
         "name": "binance_us",
-        "url": "https://www.binance.us"
+        "url": "https://www.binance.us",
+        "params": {}
       },
       "openexchangerates": {
         "type": "openexchangerates",
