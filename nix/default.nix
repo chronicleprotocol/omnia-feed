@@ -43,8 +43,7 @@ in rec {
 
   stark-cli = pkgs.callPackage ../starkware { };
 
-  #  omnia = pkgs.callPackage sources.omnia { inherit ssb-server stark-cli oracle-suite setzer; };
-  omnia = pkgs.callPackage ../../omnia { inherit ssb-server stark-cli oracle-suite setzer; };
+  omnia = pkgs.callPackage sources.omnia { inherit ssb-server stark-cli oracle-suite setzer; };
 
   install-omnia = pkgs.callPackage ../systemd { inherit omnia ssb-server oracle-suite; };
 }
