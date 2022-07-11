@@ -114,11 +114,11 @@ in {
   };
 
   transports = lib.mkOption {
-    type = lib.types.listOf (lib.types.enum [ "transport-spire" "transport-ssb" ]);
+    type = lib.types.listOf (lib.types.enum [ "spire" "ssb" ]);
     description = ''
       Transport CLIs to use.
     '';
-    default = [ "transport-spire" "transport-ssb" ];
+    default = [ "spire" "ssb" ];
   };
 
   ethRpcList = lib.mkOption {

@@ -139,7 +139,7 @@ Available values:
       "priority": "fast"
 		}
   },
-  "transports":["transport-ssb"],
+  "transports":["ssb"],
   "feeds": [
     "0x01"
   ],
