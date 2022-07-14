@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
+# bump to next
+_VERSION=$(semver -i "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version
+
 # bump RC version
 _VERSION=$(semver -i prerelease --preid rc "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version
 
