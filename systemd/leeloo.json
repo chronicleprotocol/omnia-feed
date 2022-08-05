@@ -46,11 +46,13 @@
       "teleportEVM": [
         {
           "label": "Optimism mainnet",
-          "rpc": [
-            "rpc1",
-            "rpc2",
-            "rpc3"
-          ],
+          "ethereum": {
+            "rpc": [
+              "rpc1",
+              "rpc2",
+              "rpc3"
+            ]
+          },
           "interval": 60,
           "blocksDelta": [
             10,
@@ -62,18 +64,20 @@
             28800,
             34560
           ],
-          "maxBlocks": 1000,
+          "blocksLimit": 1000,
           "addresses": [
             "0x0aB5d9f2635e16b4a8900b04591dc478aEc29F3E"
           ]
         },
         {
           "label": "Arbitrum One mainnet",
-          "rpc": [
-            "rpc1",
-            "rpc2",
-            "rpc3"
-          ],
+          "ethereum": {
+            "rpc": [
+              "rpc1",
+              "rpc2",
+              "rpc3"
+            ]
+          },
           "interval": 60,
           "blocksDelta": [
             10,
@@ -85,9 +89,9 @@
             28800,
             34560
           ],
-          "maxBlocks": 1000,
+          "blocksLimit": 1000,
           "addresses": [
-            ""
+            "0x0aB5d9f2635e16b4a8900b04591dc478aEc29F3E"
           ]
         }
       ]
