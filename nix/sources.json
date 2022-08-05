@@ -89,7 +89,7 @@
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "v0.5.1",
+        "rev": "v0.5.2",
         "sha256": "1d1h7aakc2d2f1hm76pqz388nsw50c4glam8ydkm7w0qwl8i09f5",
         "type": "tarball",
         "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.5.1.tar.gz",
