@@ -1,6 +1,9 @@
 {
   "transport": {
     "libp2p": {
+      "listenAddrs": [
+        "/ip4/0.0.0.0/tcp/8000"
+      ],
       "bootstrapAddrs": [
         "/dns/spire-bootstrap1.makerops.services/tcp/8000/p2p/12D3KooWRfYU5FaY9SmJcRD5Ku7c1XMBRqV6oM4nsnGQ1QRakSJi",
         "/dns/spire-bootstrap2.makerops.services/tcp/8000/p2p/12D3KooWBGqjW4LuHUoYZUhbWW1PnDVRUvUEpc4qgWE3Yg9z1MoR"
@@ -17,8 +20,6 @@
     "0x71eCFF5261bAA115dcB1D9335c88678324b8A987",
     "0x8ff6a38A1CD6a42cAac45F08eB0c802253f68dfD",
     "0x16655369Eb59F3e1cAFBCfAC6D3Dd4001328f747",
-    "0xD09506dAC64aaA718b45346a032F934602e29cca",
-    "0xc00584B271F378A0169dd9e5b165c0945B4fE498",
     "0x60da93D9903cb7d3eD450D4F81D402f7C4F71dd9",
     "0xa580BBCB1Cee2BCec4De2Ea870D20a12A964819e",
     "0xD27Fa2361bC2CfB9A591fb289244C538E190684B",
@@ -42,14 +43,51 @@
   },
   "leeloo": {
     "listeners": {
-      "wormhole": [
+      "teleportEVM": [
         {
-          "rpc": [],
-          "interval": 30,
-          "blocksBehind": [10, 500, 1000, 2500, 5000, 10000, 20000, 30000, 40000, 50000, 60000],
+          "label": "Optimism mainnet",
+          "rpc": [
+            "rpc1",
+            "rpc2",
+            "rpc3"
+          ],
+          "interval": 60,
+          "blocksDelta": [
+            10,
+            2880,
+            5760,
+            11520,
+            17280,
+            23040,
+            28800,
+            34560
+          ],
           "maxBlocks": 1000,
           "addresses": [
-            "0x45440Ae4988965A4cD94651E715fC9A04e62Fb41"
+            "0x0aB5d9f2635e16b4a8900b04591dc478aEc29F3E"
+          ]
+        },
+        {
+          "label": "Arbitrum One mainnet",
+          "rpc": [
+            "rpc1",
+            "rpc2",
+            "rpc3"
+          ],
+          "interval": 60,
+          "blocksDelta": [
+            10,
+            2880,
+            5760,
+            11520,
+            17280,
+            23040,
+            28800,
+            34560
+          ],
+          "maxBlocks": 1000,
+          "addresses": [
+            ""
           ]
         }
       ]
