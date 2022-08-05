@@ -90,9 +90,9 @@
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
         "rev": "v0.5.2",
-        "sha256": "1d1h7aakc2d2f1hm76pqz388nsw50c4glam8ydkm7w0qwl8i09f5",
+        "sha256": "0x1wpflv9va4xjysmfvp6jm8q740q31rsbrb2gdc2mlb3asms6yf",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.5.1.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.5.2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
