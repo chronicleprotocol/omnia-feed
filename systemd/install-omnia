@@ -352,8 +352,8 @@ while [[ -n "$1" ]]; do
 			leelooConfigOverrides+=(".ethereum.password = \"$2\"")
 			shift
 			;;
-		--wormhole)
-			leelooConfigOverrides+=(".leeloo.listeners.wormhole = $2")
+		--teleport)
+			leelooConfigOverrides+=(".leeloo.listeners = $2")
 			shift
 			;;
 		--logger)
