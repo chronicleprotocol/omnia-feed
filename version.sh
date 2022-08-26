@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
+# bump to next minor
+_VERSION=$(semver -i minor "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version
+
 # bump to next
 _VERSION=$(semver -i "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version
 
