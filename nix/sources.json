@@ -72,15 +72,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "master",
+        "branch": "sc-969-remove-starkware-dependencies-from-omnia",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "v1.12.0",
-        "sha256": "05bzny5ih2f1j8s4w42cxn476lllncxpknvd032x4rcapk8cqqyk",
+        "rev": "v1.12.1",
+        "sha256": "1158f732233mldmkzzs3pdidh7f80qraff3zgn9knfmk11p6s41v",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.12.0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.12.1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
@@ -89,10 +89,10 @@
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "v0.6.0",
-        "sha256": "0ly58srqm7azf000q6ga9xm85zdc2gpmvndrdcg27j84f0kqj3nj",
+        "rev": "v0.6.3",
+        "sha256": "0r5rvqfvfix3f7bn3ql2y7570mwgxwdvbvm4ynppa5rhmcz4gd1r",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.6.0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.6.3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
