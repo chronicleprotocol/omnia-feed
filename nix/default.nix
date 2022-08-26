@@ -47,10 +47,6 @@ in rec {
     inherit ssb-server stark-cli oracle-suite setzer;
     oracleVersion = pkgs.lib.fileContents ../version;
   };
-  #  omnia = pkgs.callPackage ../../omnia {
-  #    inherit ssb-server stark-cli oracle-suite setzer;
-  #    oracleVersion = pkgs.lib.fileContents ../version;
-  #  };
 
   install-omnia = pkgs.callPackage ../systemd { inherit omnia ssb-server oracle-suite; };
 }
