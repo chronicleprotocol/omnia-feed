@@ -33,12 +33,12 @@ _VERSION=$(semver -i "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" 
 
 # BUMP DEV
 _VERSION=$(semver -i prerelease --preid dev "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version \
-&& git commit -m "Bump version to 'v$(head -1 ./version | tr -d '\n')'" ./version \
+&& git commit -m "Bump version to 'v$(head -1 ./version | tr -d '\n')'" ./version ./nix/sources.json \
 && git push --atomic origin "$(git rev-parse --abbrev-ref HEAD)"
 
-# NEW MINOR DEV
+# NEW MINOR DEV - wen new feature
 _VERSION=$(semver -i preminor --preid dev "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version \
-&& git commit -m "Bump version to 'v$(head -1 ./version | tr -d '\n')'" ./version \
+&& git commit -m "Bump version to 'v$(head -1 ./version | tr -d '\n')'" ./version ./nix/sources.json \
 && git push --atomic origin "$(git rev-parse --abbrev-ref HEAD)"
 
 # -i --increment [<level>]
