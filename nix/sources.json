@@ -77,10 +77,10 @@
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "v1.12.6",
-        "sha256": "1rzh6cdl2ps1im7gdqbsjz7wdagvy18aykijjl8f5m8f528swn0n",
+        "rev": "v1.12.8",
+        "sha256": "0w91ba4p17l5i5glbf5m8yjb2gnx3visnvrrnwy2vk65104awij0",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.12.6.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.12.8.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
