@@ -45,54 +45,24 @@
     "listeners": {
       "teleportEVM": [
         {
-          "label": "Optimism mainnet",
+          "label": "optimism mainnet teleport gateways",
           "ethereum": {
-            "rpc": [
-              "rpc1",
-              "rpc2",
-              "rpc3"
-            ]
+          "rpc": [  "rpc1",  "rpc2",  "rpc3"]
           },
           "interval": 60,
-          "blocksDelta": [
-            10,
-            2880,
-            5760,
-            11520,
-            17280,
-            23040,
-            28800,
-            34560
-          ],
-          "blocksLimit": 1000,
-          "addresses": [
-            "0x0aB5d9f2635e16b4a8900b04591dc478aEc29F3E"
-          ]
+          "blocksDelta": [10,2880,5760,11520,17280,23040,28800,34560],
+          "blocksLimit": 2000,
+          "addresses": ["0x18d2CF2296c5b29343755E6B7e37679818913f88"]
         },
         {
-          "label": "Arbitrum One mainnet",
+          "label": "arbitrum mainnet teleport gateways",
           "ethereum": {
-            "rpc": [
-              "rpc1",
-              "rpc2",
-              "rpc3"
-            ]
+          "rpc": [  "rpc1",  "rpc2",  "rpc3"]
           },
           "interval": 60,
-          "blocksDelta": [
-            10,
-            2880,
-            5760,
-            11520,
-            17280,
-            23040,
-            28800,
-            34560
-          ],
-          "blocksLimit": 1000,
-          "addresses": [
-            "0x0aB5d9f2635e16b4a8900b04591dc478aEc29F3E"
-          ]
+          "blocksDelta": [10,2880,5760,11520,17280,23040,28800,34560],
+          "blocksLimit": 2000,
+          "addresses": ["0x5dBaf6F2bEDebd414F8d78d13499222347e59D5E"]
         }
       ]
     }
