@@ -77,10 +77,10 @@
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "v1.12.8",
-        "sha256": "0w91ba4p17l5i5glbf5m8yjb2gnx3visnvrrnwy2vk65104awij0",
+        "rev": "v1.12.9",
+        "sha256": "0v0wn139b5w5fiqixiby41mwczz7dwx111gx876v46rbf49c633n",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.12.8.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.12.9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
@@ -89,10 +89,10 @@
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "v0.6.10",
-        "sha256": "1li9baqiri3nyg46zgwb4p82y73183k2cql24bizl3g34xr51v18",
+        "rev": "v0.6.11",
+        "sha256": "00gpvbgz90b67kmd6hrzrkxi0icv5phhngqcy4pw9n6slhk5knk5",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.6.10.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.6.11.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
