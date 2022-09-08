@@ -326,9 +326,9 @@ while [[ -n "$1" ]]; do
 			;;
 		--eth-rpc)
 			if [[ -z "$SPLITTER_URLS" ]]; then
-				SPLITTER_URLS="$2"
+				SPLITTER_URLS="--eth-rpc=$2"
 			else
-				SPLITTER_URLS="$SPLITTER_URLS,$2"
+				SPLITTER_URLS="$SPLITTER_URLS --eth-rpc=$2"
 			fi
 			shift
 			;;
