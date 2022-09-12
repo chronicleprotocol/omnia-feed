@@ -332,6 +332,14 @@ while [[ -n "$1" ]]; do
 			fi
 			shift
 			;;
+		--eth-rpc-arbitrum)
+			leelooConfigUpdates+=(".leeloo.listeners.teleportEVM[1].ethereum.rpc += [\"$2\"]")
+			shift
+			;;
+		--eth-rpc-optimism)
+			leelooConfigUpdates+=(".leeloo.listeners.teleportEVM[0].ethereum.rpc += [\"$2\"]")
+			shift
+			;;
 		--from)
 			configOverrides+=(".ethereum.from = \"$2\"")
 			spireConfigOverrides+=(".ethereum.from = \"$2\"")
@@ -353,7 +361,9 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--teleport)
-			leelooConfigOverrides+=(".leeloo.listeners = $2")
+			if [[ -n "$2" ]]; then
+				leelooConfigOverrides+=(".leeloo.listeners = $2")
+			fi
 			shift
 			;;
 		--logger)
