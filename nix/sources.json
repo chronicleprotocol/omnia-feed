@@ -72,7 +72,7 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "release-1.13",
+        "branch": "release-1.13.0",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
@@ -84,15 +84,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "master",
+        "branch": "release-0.7.0",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "v0.6.11",
-        "sha256": "00gpvbgz90b67kmd6hrzrkxi0icv5phhngqcy4pw9n6slhk5knk5",
+        "rev": "e9c210839dd9999fac3f2b51c8ebd2a7497245d3",
+        "sha256": "0qpx7w44167mnr35bdxwnir5l6k34ksdxdjcxcaar52w5y8pf6c1",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.6.11.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/e9c210839dd9999fac3f2b51c8ebd2a7497245d3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
