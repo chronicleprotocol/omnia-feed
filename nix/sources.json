@@ -84,15 +84,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "release/0.7.1-sc-1076",
+        "branch": "master",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "f558c667fd6c615ef698893220d083aa91bbca8d",
+        "rev": "v0.7.1",
         "sha256": "08fjzwxd4z2vsyj4gwarha9v20mn1yn0q5i1l306p3rx239pljp7",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/f558c667fd6c615ef698893220d083aa91bbca8d.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.7.1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
