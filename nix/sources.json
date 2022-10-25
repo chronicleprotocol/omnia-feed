@@ -72,15 +72,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "master",
+        "branch": "feature/sc-1187-investigate-failing-arbitrum-goerli-transactions",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "v1.13.0",
-        "sha256": "144ny8kfslqbdaigr4d7crhsks6js9z1zvx6z930zx6h6cx0x33l",
+        "rev": "1967d4f47ef0d9297fe2e9f61d00cc250bd0f301",
+        "sha256": "0v4hx3phzfjpwppfi6pv2qgqlgfijydz2cjzcyh02zdcq7j6cq38",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.13.0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/1967d4f47ef0d9297fe2e9f61d00cc250bd0f301.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
