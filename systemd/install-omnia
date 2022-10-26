@@ -324,6 +324,10 @@ while [[ -n "$1" ]]; do
 			goferConfigOverrides+=(". * {gofer:{origins:$2}}")
 			shift
 			;;
+		--eth-gas)
+			configOverrides+=(".options.ethGas = $2")
+			shift
+			;;
 		--eth-rpc)
 			if [[ -z "$SPLITTER_URLS" ]]; then
 				SPLITTER_URLS="--eth-rpc=$2"
