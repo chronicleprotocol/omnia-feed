@@ -328,6 +328,29 @@ while [[ -n "$1" ]]; do
 			configOverrides+=(".options.ethGas = $2")
 			shift
 			;;
+		--eth-type)
+			configOverrides+=(".ethereum.type = \"$2\"")
+
+
+			case "$2" in
+				ethereum)
+					_gas=150000
+					;;
+				optimism)
+					_gas=250000
+					;;
+				arbitrum)
+					_gas=5000000
+					;;
+				*)
+					echo >&2 "Chain type must be one of [ethereum|optimism|arbitrum]"
+					usage
+					;;
+			esac
+
+			configUpdates+=(".options.ethGas = ${_gas}")
+			shift
+			;;
 		--eth-rpc)
 			if [[ -z "$SPLITTER_URLS" ]]; then
 				SPLITTER_URLS="--eth-rpc=$2"
