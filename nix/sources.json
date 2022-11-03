@@ -101,10 +101,10 @@
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "setzer",
-        "rev": "v0.6.0",
-        "sha256": "1rbdj3q0nl782xj91m865w0w6i86l40j8v5j4vhd2n7lfrg3xyp4",
+        "rev": "v0.6.1",
+        "sha256": "1gvk20glqb69skdb4abx785bpjshcinv679xiahjjy7fpm0jsp99",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/setzer/archive/v0.6.0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/setzer/archive/v0.6.1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
