@@ -72,19 +72,19 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "hotfix/sc-1249-gofer-ignores-circuit-breaker-on-dependencies",
+        "branch": "master",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "833332e53f99ba6cb00d6cb495ca5117be27cc1d",
+        "rev": "v1.13.2",
         "sha256": "17zy5pbpgvv4b14cj7s2angq1580krf9mi87ygrcy8abh8wbrqym",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/833332e53f99ba6cb00d6cb495ca5117be27cc1d.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.13.2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "roan_2022-11-01T18-19-20Z",
+        "branch": "master",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
