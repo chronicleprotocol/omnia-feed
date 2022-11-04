@@ -7,8 +7,8 @@ _VERSION=$(semver -i minor "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VER
 # bump to next patch
 _VERSION=$(semver -i "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version
 
-# bump RC version
-_VERSION=$(semver -i prerelease --preid rc "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version
+# bump PRE version
+_VERSION=$(semver -i prerelease --preid pre "$(head -1 ./version | tr -d '\n')") && tee <<<"$_VERSION" ./version
 
 # Describe change in a commit
 git commit -m "Bump version to 'v$(head -1 ./version | tr -d '\n')'" ./version

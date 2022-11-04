@@ -240,20 +240,6 @@
           "minimumSuccessfulSources": 3
         }
       },
-      "UNI/USD": {
-        "method": "median",
-        "sources": [
-          [{ "origin": "binance", "pair": "UNI/BTC" },{ "origin": ".", "pair": "BTC/USD" }],
-          [{ "origin": "coinbasepro", "pair": "UNI/USD" }],
-          [{ "origin": "ftx", "pair": "UNI/USD" }],
-          [{ "origin": "huobi", "pair": "UNI/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
-          [{ "origin": "okx", "pair": "UNI/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
-          [{ "origin": "uniswapV3", "pair": "UNI/ETH" },{ "origin": ".", "pair": "ETH/USD" }]
-        ],
-        "params": {
-          "minimumSuccessfulSources": 3
-        }
-      },
       "STETH/ETH": {
         "method": "median",
         "sources": [
