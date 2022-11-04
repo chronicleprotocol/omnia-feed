@@ -72,15 +72,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "sc-969-remove-starkware-dependencies-from-omnia",
+        "branch": "master",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "v1.12.9",
-        "sha256": "0v0wn139b5w5fiqixiby41mwczz7dwx111gx876v46rbf49c633n",
+        "rev": "v1.13.3",
+        "sha256": "1b1b162b6bvc3mqc29cah9kp0xrzxa246a2ma5y3q5d56fdc6dg1",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.12.9.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.13.3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
@@ -89,10 +89,10 @@
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "v0.6.11",
-        "sha256": "00gpvbgz90b67kmd6hrzrkxi0icv5phhngqcy4pw9n6slhk5knk5",
+        "rev": "v0.7.2",
+        "sha256": "1vaq30l4ckdy2ywlwrkbl9ysi1w971xn570s4rcm2872bf30xkrv",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.6.11.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.7.2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
@@ -101,10 +101,10 @@
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "setzer",
-        "rev": "v0.6.0",
-        "sha256": "1rbdj3q0nl782xj91m865w0w6i86l40j8v5j4vhd2n7lfrg3xyp4",
+        "rev": "v0.6.1",
+        "sha256": "1gvk20glqb69skdb4abx785bpjshcinv679xiahjjy7fpm0jsp99",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/setzer/archive/v0.6.0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/setzer/archive/v0.6.1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
