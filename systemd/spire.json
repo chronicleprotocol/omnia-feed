@@ -43,33 +43,15 @@
       "address": "127.0.0.1:8082"
     },
     "pairs": [
-      "AAVEUSD",
-      "AVAXUSD",
-      "BALUSD",
-      "BATUSD",
       "BTCUSD",
-      "COMPUSD",
-      "CRVUSD",
-      "DOTUSD",
       "ETHBTC",
       "ETHUSD",
-      "FILUSD",
       "LINKUSD",
-      "LRCUSD",
       "MANAUSD",
       "MATICUSD",
-      "PAXGUSD",
-      "SNXUSD",
-      "SOLUSD",
-      "UNIUSD",
-      "USDTUSD",
-      "WNXMUSD",
+      "RETHUSD",
       "WSTETHUSD",
-      "XRPUSD",
-      "XTZUSD",
-      "YFIUSD",
-      "ZECUSD",
-      "ZRXUSD"
+      "YFIUSD"
     ]
   }
 }
