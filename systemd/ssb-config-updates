@@ -1,2 +1,0 @@
-# deafult .friends.hops to 6
-.friends.hops = (.friends.hops // 6)

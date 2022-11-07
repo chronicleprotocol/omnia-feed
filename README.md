@@ -51,7 +51,7 @@ Query Oracle Price Onchain
 seth --from-wei $(seth --to-dec $(seth call <ORACLE_CONTRACT> "read()(uint256)"))
 ```
 This will require the address you are submitting the query from to be whitelisted in the Oracle smart contract.
-To get whitelisted on a Kovan Oracle please send an email to nik@makerdao.com.
+To get whitelisted on a Kovan Oracle please send an email to nik@chroniclelabs.org.
 To get whitelisted on a Mainnet Oracle please submit a proposal in the Oracle section of the Maker Forum forum.makerdao.com
 Your proposal will need to be ratified by MKR Governance to be enacted. Details of the proposal format can be found inside the Forum.
 
@@ -67,7 +67,7 @@ Then run the following to make the `omnia`, `ssb-server` and `install-omnia`
 commands available in your user environment:
 
 ```
-nix-env -i -f https://github.com/makerdao/oracles-v2/tarball/stable
+nix-env -i -f https://github.com/chronicleprotocol/oracles/tarball/v1.13.3 # update this to the latest version
 ```
 
 Get the Scuttlebot private network keys (caps) from an admin and put it in a file

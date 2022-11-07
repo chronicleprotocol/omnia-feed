@@ -42,17 +42,31 @@ Usage: install-omnia COMMAND OPTIONS...
 Commands:
   relay Install Omnia service with default relay config
   feed  Install Omnia service with default feed config
-  help  Print this message
+  --help  Print this message
 
 Options:
-  --from         ADDRESS          Set Ethereum address to use for signing
-  --keystore     PATH             Set Ethereum keystore path
-  --password     PATH             Set Ethereum keystore password file path
-  --network      ETH_NETWORK      Set relay Ethereum network
-  --ssb-caps     CAPS_FILE        Set Scuttlebot caps from file
-  --ssb-external EXTERNAL_ADDRS   Set Scuttlebot external IP/host address
-  --ssb-secret   SECRET_FILE      Install Scuttlebot secret
-  --ssb-gossip   GOSSIP_JSON_FILE Install Scuttlbot gossip.json file
+  --from ADDRESS   Set Ethereum address to use for signing
+  --keystore PATH  Set Ethereum keystore path
+  --password PATH  Set Ethereum keystore password file path
+
+  --ssb-caps CAPS_FILE           Set Scuttlebot caps from file
+  --ssb-external EXTERNAL_ADDRS  Set Scuttlebot external IP/host address
+  --ssb-secret SECRET_FILE       Install Scuttlebot secret
+  --ssb-gossip GOSSIP_JSON_FILE  Install Scuttlbot gossip.json file
+
+  --eth-rpc URL                                  add an ethereum node rpc url to the list (can be used multiple times)
+  --eth-rpc-arbitrum URL                         add an arbitrum node rpc url to the list (can be used multiple times)
+  --eth-rpc-optimism URL                         add an optimism node rpc url to the list (can be used multiple times)
+  --eth-type [ ethereum | optimism | arbitrum ]  set blockchain type
+  --eth-gas GAS_LIMIT                            set gas limit for transactions
+
+  --set-origin-param NAME KEY VALUE  set the KEY parameter to VALUE for an origin named NAME
+
+  --log-format [ text | json ]                        format logs as text or json
+  --log-verbosity [ error | warning | info | debug ]  set log verbosity
+
+  --verbose  enable verbose output (for Omnia only)
+  --debug    run in debug mode (for Omnia only)
 EOF
 	exit 1
 }
@@ -78,8 +92,7 @@ $LEELOO_PATH $LEELOO_CONFIG
 $LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
 $SPLITTER_PATH $SPLITTER_URLS
 $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
-' < "$2" \
-		| sudo tee "$target" > /dev/null
+' < "$2" | sudo tee "$target" > /dev/null
 
 	echo>&2 "$name -> $target"
 
@@ -97,26 +110,26 @@ $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
 copyOmniaConf() {
 	echo >&2 "OMNIA_CONFIG: START"
 
-	local savedConfig
-
 	if [[ -f "$OMNIA_CONFIG" ]]; then
-		savedConfig="$( jq '{ethereum,services} | del(.. | nulls)' "$OMNIA_CONFIG")"
+		local _savedConfig
+		_savedConfig="$(jq -c '{ethereum} | del(.. | nulls)' "$OMNIA_CONFIG")"
+		if [[ -n "$_savedConfig" ]]; then
+			configUpdates+=(". * $_savedConfig")
+		fi
 	fi
 
 	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
 	sudo chmod u+w "$OMNIA_CONFIG"
 
-	if [[ -n "$savedConfig" ]]; then
-		configUpdates=(". * $savedConfig" "${configUpdates[@]}")
-	fi
-
-	configUpdates+=( '.options.logFormat = "text"' )
-	configOverrides+=( '.options.setzerEthRpcUrl = "http://127.0.0.1:9989"' )
+	configUpdates+=('.options.logFormat = "text"')
+	configOverrides+=('.options.setzerEthRpcUrl = "http://127.0.0.1:9989"')
 
 	for i in "${!configUpdates[@]}"; do
+		echo >&2 "${configUpdates[$i]}"
 		sudo tee "$OMNIA_CONFIG" <<< "$(jq "${configUpdates[$i]}" "$OMNIA_CONFIG")" > /dev/null
 	done
 	for i in "${!configOverrides[@]}"; do
+		echo >&2 "${configOverrides[$i]}"
 		sudo tee "$OMNIA_CONFIG" <<< "$(jq "${configOverrides[$i]}" "$OMNIA_CONFIG")" > /dev/null
 	done
 
@@ -127,6 +140,7 @@ declare -a configOverrides
 
 copySsbConf() {
 	echo >&2 "SSB_CONF: START"
+	ssbConfigUpdates+=(".friends.hops = (.friends.hops // 6)")
 
 	local confDir="$HOME/.ssb"
 	export SSB_KEYS="$confDir/secret"
@@ -138,12 +152,12 @@ copySsbConf() {
 	mkdir -p "$confDir"
 
 	if [[ -f $SSB_CONF ]]; then
-		updatedConf=$( jq . "$SSB_CONF")
+		updatedConf=$(jq . "$SSB_CONF")
 	fi
 	[[ -n $updatedConf ]] || updatedConf=$(jq . "$SHARE_DIR/ssb-config.json")
 
 	for i in "${!ssbConfigUpdates[@]}"; do
-		updatedConf=$( jq "${ssbConfigUpdates[$i]}" <<< "$updatedConf")
+		updatedConf=$(jq -c "${ssbConfigUpdates[$i]}" <<< "$updatedConf")
 	done
 
 	tee "$SSB_CONF" <<< "$updatedConf" > /dev/null 2>&1
@@ -165,34 +179,33 @@ copySsbConf() {
 
 	echo >&2 "SSB_CONF: DONE"
 }
-mapfile -t ssbConfigUpdates < <(grep -v "^ *#\|^ *$" "$SHARE_DIR/ssb-config-updates")
+declare -a ssbConfigUpdates
 
 copySpireConf() {
 	echo >&2 "SPIRE_CONFIG: START"
 
-	if [[ -f "${SPIRE_CONFIG%.conf}.json" ]]
-	then
+	if [[ -f "${SPIRE_CONFIG%.conf}.json" ]]; then
 		sudo mv -f "${SPIRE_CONFIG%.conf}.json" "$SPIRE_CONFIG"
 	fi
 
-	local savedConfig
 	if [[ -f "$SPIRE_CONFIG" ]]; then
-		savedConfig="$(jq '{ethereum} | del(.. | nulls)' "$SPIRE_CONFIG")"
+		local _savedConfig
+		_savedConfig="$(jq '{ethereum} | del(.. | nulls)' "$SPIRE_CONFIG")"
+		if [[ -n "$_savedConfig" ]]; then
+			spireConfigOverrides+=(". * $_savedConfig")
+		fi
 	fi
 
 	sudo cp -v "$SHARE_DIR/spire.json" "$SPIRE_CONFIG" >&2
 	sudo chmod u+w "$SPIRE_CONFIG"
 
-	if [[ -n "$savedConfig" ]]; then
-		spireConfigOverrides=( ". * $savedConfig" )
-	fi
 
 	for i in "${!spireConfigUpdates[@]}"; do
-		echo >&2 "${spireConfigUpdates[$i]}"
+		echo >&2 "  ${spireConfigUpdates[$i]}"
 		sudo tee "$SPIRE_CONFIG" <<<"$(jq -c "${spireConfigUpdates[$i]}" "$SPIRE_CONFIG")" > /dev/null
 	done
 	for i in "${!spireConfigOverrides[@]}"; do
-		echo >&2 "${spireConfigOverrides[$i]}"
+		echo >&2 "  ${spireConfigOverrides[$i]}"
 		sudo tee "$SPIRE_CONFIG" <<<"$(jq -c "${spireConfigOverrides[$i]}" "$SPIRE_CONFIG")" > /dev/null
 	done
 
@@ -209,21 +222,33 @@ copyLeelooConf() {
 		sudo mv -f "${LEELOO_CONFIG%.conf}.json" "$LEELOO_CONFIG"
 	fi
 
-	if [[ ! -f "$LEELOO_CONFIG" ]]; then
-		sudo cp -v "$SHARE_DIR/leeloo.json" "$LEELOO_CONFIG" >&2
-		sudo chmod u+w "$LEELOO_CONFIG"
+	if [[ -f "${LEELOO_CONFIG}" ]]
+	then
+		local _savedConfig
+		_savedConfig="$(jq -c '{ethereum,leeloo:{listeners:{teleportEVM:[{ethereum:{rpc:.leeloo.listeners.teleportEVM[0].ethereum.rpc}},{ethereum:{rpc:.leeloo.listeners.teleportEVM[1].ethereum.rpc}}]}}} | del(.. | nulls)' "${LEELOO_CONFIG}")"
+
+		local _optRPCs
+		_optRPCs="$(jq -c '.leeloo.listeners.teleportEVM[0].ethereum.rpc // []' <<<"${_savedConfig}")"
+		leelooConfigUpdates+=(".leeloo.listeners.teleportEVM[0].ethereum.rpc = ${_optRPCs}")
+
+		local _arbRPCs
+		_arbRPCs="$(jq -c '.leeloo.listeners.teleportEVM[1].ethereum.rpc // []' <<<"${_savedConfig}")"
+		leelooConfigUpdates+=(".leeloo.listeners.teleportEVM[1].ethereum.rpc = ${_arbRPCs}")
+
+		local _eth
+		_eth="$(jq -c '.ethereum' <<<"${_savedConfig}")"
+		leelooConfigUpdates+=(".ethereum = ${_eth}")
 	else
-		local _defaultConf
-		_defaultConf=$(jq -c '{feeds,leeloo:{pairs:.leeloo.pairs},transport,ethereum}' "$SHARE_DIR/leeloo.json")
-		leelooConfigUpdates+=(". * ${_defaultConf}")
+		sudo cp -v "$SHARE_DIR/leeloo.json" "$LEELOO_CONFIG" >&2
+		sudo chmod u+w "$LEELOO_CONFIG" >&2
 	fi
 
 	for i in "${!leelooConfigUpdates[@]}"; do
-		echo >&2 "${leelooConfigUpdates[$i]}"
+		echo >&2 "  ${leelooConfigUpdates[$i]}"
 		sudo tee "$LEELOO_CONFIG" <<< "$(jq -c "${leelooConfigUpdates[$i]}" "$LEELOO_CONFIG")" > /dev/null
 	done
 	for i in "${!leelooConfigOverrides[@]}"; do
-		echo >&2 "${leelooConfigOverrides[$i]}"
+		echo >&2 "  ${leelooConfigOverrides[$i]}"
 		sudo tee "$LEELOO_CONFIG" <<< "$(jq -c "${leelooConfigOverrides[$i]}" "$LEELOO_CONFIG")" > /dev/null
 	done
 
@@ -240,25 +265,25 @@ copyGoferConf() {
 		sudo mv -f "${GOFER_CONFIG%.conf}.json" "$GOFER_CONFIG"
 	fi
 
-	local savedConfig
 	if [[ -f "$GOFER_CONFIG" ]]; then
-		savedConfig="$(jq '{ethereum,gofer:{origins:{openexchangerates:{params:{apiKey:.gofer.origins.openexchangerates.params.apiKey}}}}} | del(.. | nulls)' "$GOFER_CONFIG")"
+		local _savedConfig
+		_savedConfig="$(jq '{ethereum,gofer:{origins:{openexchangerates:{params:{apiKey:.gofer.origins.openexchangerates.params.apiKey}}}}} | del(.. | nulls)' "$GOFER_CONFIG")"
+		if [[ -n "$_savedConfig" ]]; then
+			goferConfigOverrides=( ". * $_savedConfig" )
+		fi
 	fi
 
 	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
 	sudo chmod u+w "$GOFER_CONFIG"
 
-	if [[ -n "$savedConfig" ]]; then
-		goferConfigOverrides=( ". * $savedConfig" )
-	fi
 	goferConfigOverrides+=('.ethereum.rpc = "http://127.0.0.1:9989"')
 
 	for i in "${!goferConfigUpdates[@]}"; do
-		echo >&2 "${goferConfigUpdates[$i]}"
+		echo >&2 "  ${goferConfigUpdates[$i]}"
 		sudo tee "$GOFER_CONFIG" <<< "$(jq "${goferConfigUpdates[$i]}" "$GOFER_CONFIG")" > /dev/null
 	done
 	for i in "${!goferConfigOverrides[@]}"; do
-		echo >&2 "${goferConfigOverrides[$i]}"
+		echo >&2 "  ${goferConfigOverrides[$i]}"
 		sudo tee "$GOFER_CONFIG" <<< "$(jq "${goferConfigOverrides[$i]}" "$GOFER_CONFIG")" > /dev/null
 	done
 
@@ -310,12 +335,8 @@ while [[ -n "$1" ]]; do
 		--verbose)
 			configOverrides+=(".options.verbose = true")
 			;;
-		--logFormat)
-			configOverrides+=(".options.logFormat = \"$2\"")
-			shift
-			;;
-		--override-origin)
-			goferConfigOverrides+=(". * {gofer:{origins:{\"$2\":{type:\"$2\",name:\"$2\",params:{\"$3\": \"$4\"}}}}}")
+		--set-origin-param)
+			goferConfigOverrides+=(".gofer.origins.\"$2\".params.\"$3\" = \"$4\"")
 			shift
 			shift
 			shift
@@ -330,8 +351,6 @@ while [[ -n "$1" ]]; do
 			;;
 		--eth-type)
 			configOverrides+=(".ethereum.type = \"$2\"")
-
-
 			case "$2" in
 				ethereum)
 					_gas=150000
@@ -347,7 +366,6 @@ while [[ -n "$1" ]]; do
 					usage
 					;;
 			esac
-
 			configUpdates+=(".options.ethGas = ${_gas}")
 			shift
 			;;
@@ -360,11 +378,11 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--eth-rpc-arbitrum)
-			leelooConfigUpdates+=(".leeloo.listeners.teleportEVM[1].ethereum.rpc += [\"$2\"]")
+			leelooConfigOverrides+=(".leeloo.listeners.teleportEVM[1].ethereum.rpc += [\"$2\"]")
 			shift
 			;;
 		--eth-rpc-optimism)
-			leelooConfigUpdates+=(".leeloo.listeners.teleportEVM[0].ethereum.rpc += [\"$2\"]")
+			leelooConfigOverrides+=(".leeloo.listeners.teleportEVM[0].ethereum.rpc += [\"$2\"]")
 			shift
 			;;
 		--from)
