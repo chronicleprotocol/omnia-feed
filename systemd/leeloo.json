@@ -47,7 +47,7 @@
         {
           "label": "optimism mainnet teleport gateways",
           "ethereum": {
-          "rpc": []
+            "rpc": []
           },
           "interval": 60,
           "prefetchPeriod": 604800,
@@ -59,7 +59,7 @@
         {
           "label": "arbitrum mainnet teleport gateways",
           "ethereum": {
-          "rpc": []
+            "rpc": []
           },
           "interval": 60,
           "prefetchPeriod": 604800,
