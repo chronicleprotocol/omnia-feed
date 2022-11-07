@@ -42,17 +42,31 @@ Usage: install-omnia COMMAND OPTIONS...
 Commands:
   relay Install Omnia service with default relay config
   feed  Install Omnia service with default feed config
-  help  Print this message
+  --help  Print this message
 
 Options:
-  --from         ADDRESS          Set Ethereum address to use for signing
-  --keystore     PATH             Set Ethereum keystore path
-  --password     PATH             Set Ethereum keystore password file path
-  --network      ETH_NETWORK      Set relay Ethereum network
-  --ssb-caps     CAPS_FILE        Set Scuttlebot caps from file
-  --ssb-external EXTERNAL_ADDRS   Set Scuttlebot external IP/host address
-  --ssb-secret   SECRET_FILE      Install Scuttlebot secret
-  --ssb-gossip   GOSSIP_JSON_FILE Install Scuttlbot gossip.json file
+  --from ADDRESS   Set Ethereum address to use for signing
+  --keystore PATH  Set Ethereum keystore path
+  --password PATH  Set Ethereum keystore password file path
+
+  --ssb-caps CAPS_FILE           Set Scuttlebot caps from file
+  --ssb-external EXTERNAL_ADDRS  Set Scuttlebot external IP/host address
+  --ssb-secret SECRET_FILE       Install Scuttlebot secret
+  --ssb-gossip GOSSIP_JSON_FILE  Install Scuttlbot gossip.json file
+
+  --eth-rpc URL                                  add an ethereum node rpc url to the list (can be used multiple times)
+  --eth-rpc-arbitrum URL                         add an arbitrum node rpc url to the list (can be used multiple times)
+  --eth-rpc-optimism URL                         add an optimism node rpc url to the list (can be used multiple times)
+  --eth-type [ ethereum | optimism | arbitrum ]  set blockchain type
+  --eth-gas GAS_LIMIT                            set gas limit for transactions
+
+  --set-origin-param NAME KEY VALUE  set the KEY parameter to VALUE for an origin named NAME
+
+  --log-format [ text | json ]                        format logs as text or json
+  --log-verbosity [ error | warning | info | debug ]  set log verbosity
+
+  --verbose  enable verbose output (for Omnia only)
+  --debug    run in debug mode (for Omnia only)
 EOF
 	exit 1
 }
@@ -78,8 +92,7 @@ $LEELOO_PATH $LEELOO_CONFIG
 $LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
 $SPLITTER_PATH $SPLITTER_URLS
 $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
-' "$2" \
-		| sudo tee "$target" > /dev/null
+' < "$2" | sudo tee "$target" > /dev/null
 
 	echo>&2 "$name -> $target"
 
@@ -179,7 +192,7 @@ copySpireConf() {
 		local _savedConfig
 		_savedConfig="$(jq '{ethereum} | del(.. | nulls)' "$SPIRE_CONFIG")"
 		if [[ -n "$_savedConfig" ]]; then
-			spireConfigOverrides=( ". * $_savedConfig" )
+			spireConfigOverrides+=(". * $_savedConfig")
 		fi
 	fi
 
@@ -252,17 +265,17 @@ copyGoferConf() {
 		sudo mv -f "${GOFER_CONFIG%.conf}.json" "$GOFER_CONFIG"
 	fi
 
-	local _savedConfig
 	if [[ -f "$GOFER_CONFIG" ]]; then
+		local _savedConfig
 		_savedConfig="$(jq '{ethereum,gofer:{origins:{openexchangerates:{params:{apiKey:.gofer.origins.openexchangerates.params.apiKey}}}}} | del(.. | nulls)' "$GOFER_CONFIG")"
+		if [[ -n "$_savedConfig" ]]; then
+			goferConfigOverrides=( ". * $_savedConfig" )
+		fi
 	fi
 
 	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
 	sudo chmod u+w "$GOFER_CONFIG"
 
-	if [[ -n "$_savedConfig" ]]; then
-		goferConfigOverrides=( ". * $_savedConfig" )
-	fi
 	goferConfigOverrides+=('.ethereum.rpc = "http://127.0.0.1:9989"')
 
 	for i in "${!goferConfigUpdates[@]}"; do
@@ -322,12 +335,8 @@ while [[ -n "$1" ]]; do
 		--verbose)
 			configOverrides+=(".options.verbose = true")
 			;;
-		--logFormat)
-			configOverrides+=(".options.logFormat = \"$2\"")
-			shift
-			;;
-		--override-origin)
-			goferConfigOverrides+=(". * {gofer:{origins:{\"$2\":{type:\"$2\",name:\"$2\",params:{\"$3\": \"$4\"}}}}}")
+		--set-origin-param)
+			goferConfigOverrides+=(".gofer.origins.\"$2\".params.\"$3\" = \"$4\"")
 			shift
 			shift
 			shift
