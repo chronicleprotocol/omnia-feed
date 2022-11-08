@@ -9,7 +9,7 @@ Environment="SPLITTER_LOG_FORMAT=$SPLITTER_LOG_FORMAT"
 Environment="SPLITTER_LOG_VERBOSITY=$SPLITTER_LOG_VERBOSITY"
 User=$USER
 Group=$USER
-ExecStart=$SPLITTER_PATH --listen 127.0.0.1:9989 $SPLITTER_URLS agent  --log.format $SPLITTER_LOG_FORMAT --log.verbosity $SPLITTER_LOG_VERBOSITY
+ExecStart=$SPLITTER_PATH --listen 127.0.0.1:9989 $SPLITTER_URLS agent --log.format $SPLITTER_LOG_FORMAT --log.verbosity $SPLITTER_LOG_VERBOSITY
 Restart=always
 RestartSec=5
 

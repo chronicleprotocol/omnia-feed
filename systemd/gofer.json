@@ -1,23 +1,87 @@
 {
   "ethereum": {
-     "rpc": ""
+     "rpc": []
   },
   "gofer": {
     "rpc": {
       "address": "127.0.0.1:8081"
     },
     "origins": {
+      "balancer": {
+        "type": "balancer",
+        "name": "balancer",
+        "params": {
+          "contracts": {
+            "BAL/USD": "0xba100000625a3754423978a60c9317c58a424e3d",
+            "AAVE/USD": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
+            "WNXM/USD": "0x0d438f3b5175bebc262bf23753c1e53d03432bde"
+          }
+        }
+      },
       "binance_us": {
         "type": "binance",
         "name": "binance_us",
         "url": "https://www.binance.us",
         "params": {}
       },
+      "bittrex": {
+        "type": "bittrex",
+        "name": "bittrex",
+        "params": {
+          "symbolAliases": {
+            "REP": "REPV2"
+          }
+        }
+      },
+      "curve": {
+        "type": "curve",
+        "name": "curve",
+        "params": {
+          "contracts": {
+            "RETH/WSTETH": "0x447Ddd4960d9fdBF6af9a790560d0AF76795CB08",
+            "ETH/STETH": "0xDC24316b9AE028F1497c275EB9192a3Ea0f67022"
+          }
+        }
+      },
       "openexchangerates": {
         "type": "openexchangerates",
         "name": "openexchangerates",
         "params": {
           "apiKey": "API_KEY"
+        }
+      },
+      "poloniex": {
+        "type": "poloniex",
+        "name": "poloniex",
+        "params": {
+          "symbolAliases": {
+            "REP": "REPV2"
+          }
+        }
+      },
+      "rocketpool": {
+        "type": "rocketpool",
+        "name": "rocketpool",
+        "params": {
+          "contracts": {
+            "RETH/ETH": "0xae78736Cd615f374D3085123A210448E74Fc6393"
+          }
+        }
+      },
+      "sushiswap": {
+        "type": "sushiswap",
+        "name": "sushiswap",
+        "params": {
+          "symbolAliases": {
+            "ETH": "WETH",
+            "BTC": "WBTC",
+            "USD": "USDC"
+          },
+          "contracts": {
+            "SNX/WETH": "0xa1d7b2d891e3a1f9ef4bbc5be20630c2feb1c470",
+            "CRV/WETH": "0x58dc5a51fe44589beb22e8ce67720b5bc5378009",
+            "YFI/WETH": "0x088ee5007c98a9677165d78dd2109ae4a3d04d0c"
+          }
         }
       },
       "uniswap": {
@@ -63,91 +127,12 @@
           }
         }
       },
-      "balancer": {
-        "type": "balancer",
-        "name": "balancer",
-        "params": {
-          "contracts": {
-            "BAL/USD": "0xba100000625a3754423978a60c9317c58a424e3d",
-            "AAVE/USD": "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
-            "WNXM/USD": "0x0d438f3b5175bebc262bf23753c1e53d03432bde"
-          }
-        }
-      },
-      "bittrex": {
-        "type": "bittrex",
-        "name": "bittrex",
-        "params": {
-          "symbolAliases": {
-            "REP": "REPV2"
-          }
-        }
-      },
-      "poloniex": {
-        "type": "poloniex",
-        "name": "poloniex",
-        "params": {
-          "symbolAliases": {
-            "REP": "REPV2"
-          }
-        }
-      },
-      "sushiswap": {
-        "type": "sushiswap",
-        "name": "sushiswap",
-        "params": {
-          "symbolAliases": {
-            "ETH": "WETH",
-            "BTC": "WBTC",
-            "USD": "USDC"
-          },
-          "contracts": {
-            "SNX/WETH": "0xa1d7b2d891e3a1f9ef4bbc5be20630c2feb1c470",
-            "CRV/WETH": "0x58dc5a51fe44589beb22e8ce67720b5bc5378009",
-            "YFI/WETH": "0x088ee5007c98a9677165d78dd2109ae4a3d04d0c"
-          }
-        }
-      },
-      "curve": {
-        "type": "curve",
-        "name": "curve",
-        "params": {
-          "contracts": {
-            "RETH/WSTETH": "0x447Ddd4960d9fdBF6af9a790560d0AF76795CB08",
-            "ETH/STETH": "0xDC24316b9AE028F1497c275EB9192a3Ea0f67022"
-          }
-        }
-      },
-      "balancerV2": {
-        "type": "balancerV2",
-        "name": "balancerV2",
-        "params": {
-          "symbolAliases": {
-            "ETH": "WETH"
-          },
-          "contracts": {
-            "Ref:RETH/WETH": "0xae78736Cd615f374D3085123A210448E74Fc6393",
-            "RETH/WETH": "0x1E19CF2D73a72Ef1332C882F20534B6519Be0276",
-            "STETH/WETH": "0x32296969ef14eb0c6d29669c550d4a0449130230",
-            "WETH/YFI": "0x186084ff790c65088ba694df11758fae4943ee9e"
-          }
-        }
-      },
       "wsteth": {
         "type": "wsteth",
         "name": "wsteth",
         "params": {
           "contracts": {
             "WSTETH/STETH": "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0"
-          }
-        }
-      },
-      "rocketpool": {
-        "type": "rocketpool",
-        "name": "rocketpool",
-        "params": {
-          "contracts": {
-            "RETH/ETH": "0xae78736Cd615f374D3085123A210448E74Fc6393"
           }
         }
       }
@@ -174,8 +159,8 @@
           [{ "origin": "bitfinex", "pair": "ETH/BTC" }],
           [{ "origin": "coinbasepro", "pair": "ETH/BTC" }],
           [{ "origin": "huobi", "pair": "ETH/BTC" }],
-          [{ "origin": "poloniex", "pair": "ETH/BTC" }],
-          [{ "origin": "kraken", "pair": "ETH/BTC" }]
+          [{ "origin": "kraken", "pair": "ETH/BTC" }],
+          [{ "origin": "poloniex", "pair": "ETH/BTC" }]
         ],
         "params": {
           "minimumSuccessfulSources": 4
@@ -214,10 +199,10 @@
       "MANA/USD": {
         "method": "median",
         "sources": [
-          [{ "origin": "binance_us", "pair": "MANA/USD" }],
           [{ "origin": "binance", "pair": "MANA/BTC" },{ "origin": ".", "pair": "BTC/USD" }],
-          [{ "origin": "ftx", "pair": "MANA/USD" }],
+          [{ "origin": "binance_us", "pair": "MANA/USD" }],
           [{ "origin": "coinbasepro", "pair": "MANA/USD" }],
+          [{ "origin": "ftx", "pair": "MANA/USD" }],
           [{ "origin": "kraken", "pair": "MANA/USD" }],
           [{ "origin": "okx", "pair": "MANA/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
           [{ "origin": "upbit", "pair": "MANA/KRW" },{ "origin": "openexchangerates", "pair": "KRW/USD", "ttl": 300 }]
@@ -230,21 +215,44 @@
         "method": "median",
         "sources": [
           [{ "origin": "binance", "pair": "MATIC/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
-          [{ "origin": "huobi", "pair": "MATIC/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
           [{ "origin": "coinbasepro", "pair": "MATIC/USD" }],
           [{ "origin": "ftx", "pair": "MATIC/USD" }],
           [{ "origin": "gemini", "pair": "MATIC/USD" }],
+          [{ "origin": "huobi", "pair": "MATIC/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
           [{ "origin": "kraken", "pair": "MATIC/USD" }]
         ],
         "params": {
           "minimumSuccessfulSources": 3
         }
       },
+      "RETH/ETH": {
+        "method": "median",
+        "sources": [
+          [{ "origin": "balancerV2", "pair": "RETH/ETH" }],
+          [{ "origin": "curve", "pair": "RETH/WSTETH" },{ "origin": ".", "pair": "WSTETH/ETH" }],
+          [{ "origin": "rocketpool", "pair": "RETH/ETH" }]
+        ],
+        "params": {
+          "minimumSuccessfulSources": 3,
+          "postPriceHook": {
+            "circuitContract": "0xa3105dee5ec73a7003482b1a8968dc88666f3589"
+          }
+        }
+      },
+      "RETH/USD": {
+        "method": "median",
+        "sources": [
+          [{ "origin": ".", "pair": "RETH/ETH" },{ "origin": ".", "pair": "ETH/USD" }]
+        ],
+        "params": {
+          "minimumSuccessfulSources": 1
+        }
+      },
       "STETH/ETH": {
         "method": "median",
         "sources": [
-          [{ "origin": "curve", "pair": "STETH/ETH" }],
-          [{ "origin": "balancerV2", "pair": "STETH/ETH" }]
+          [{ "origin": "balancerV2", "pair": "STETH/ETH" }],
+          [{ "origin": "curve", "pair": "STETH/ETH" }]
         ],
         "params": {
           "minimumSuccessfulSources": 2
@@ -265,11 +273,11 @@
         "method": "median",
         "sources": [
           [{ "origin": "binance", "pair": "BTC/USDT" },{ "origin": ".", "pair": "BTC/USD" }],
-          [{ "origin": "okx", "pair": "BTC/USDT" },{ "origin": ".", "pair": "BTC/USD" }],
           [{ "origin": "bitfinex", "pair": "USDT/USD" }],
           [{ "origin": "coinbasepro", "pair": "USDT/USD" }],
           [{ "origin": "ftx", "pair": "USDT/USD" }],
-          [{ "origin": "kraken", "pair": "USDT/USD" }]
+          [{ "origin": "kraken", "pair": "USDT/USD" }],
+          [{ "origin": "okx", "pair": "BTC/USDT" },{ "origin": ".", "pair": "BTC/USD" }]
         ],
         "params": {
           "minimumSuccessfulSources": 3
@@ -297,38 +305,15 @@
         "method": "median",
         "sources": [
           [{ "origin": "balancerV2", "pair": "ETH/YFI" },{ "origin": ".", "pair": "ETH/USD" }],
-          [{ "origin": "sushiswap", "pair": "YFI/ETH" },{ "origin": ".", "pair": "ETH/USD" }],
           [{ "origin": "binance", "pair": "YFI/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
-          [{ "origin": "okx", "pair": "YFI/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
           [{ "origin": "coinbasepro", "pair": "YFI/USD" }],
           [{ "origin": "ftx", "pair": "YFI/USD" }],
-          [{ "origin": "kraken", "pair": "YFI/USD" }]
+          [{ "origin": "kraken", "pair": "YFI/USD" }],
+          [{ "origin": "okx", "pair": "YFI/USDT" },{ "origin": ".", "pair": "USDT/USD" }],
+          [{ "origin": "sushiswap", "pair": "YFI/ETH" },{ "origin": ".", "pair": "ETH/USD" }]
         ],
         "params": {
           "minimumSuccessfulSources": 2
-        }
-      },
-      "RETH/ETH": {
-        "method": "median",
-        "sources": [
-          [{ "origin": "rocketpool", "pair": "RETH/ETH" }],
-          [{ "origin": "balancerV2", "pair": "RETH/ETH" }],
-          [{ "origin": "curve", "pair": "RETH/WSTETH" },{ "origin": ".", "pair": "WSTETH/ETH" }]
-        ],
-        "params": {
-          "minimumSuccessfulSources": 3,
-          "postPriceHook": {
-            "circuitContract": "0xa3105dee5ec73a7003482b1a8968dc88666f3589"
-          }
-        }
-      },
-      "RETH/USD": {
-        "method": "median",
-        "sources": [
-          [{ "origin": ".", "pair": "RETH/ETH" },{ "origin": ".", "pair": "ETH/USD" }]
-        ],
-        "params": {
-          "minimumSuccessfulSources": 1
         }
       }
     }
