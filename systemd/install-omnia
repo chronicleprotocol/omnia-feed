@@ -26,6 +26,7 @@ export OMNIA_PATH="${OMNIA_PATH:-$(command -v omnia)}"
 export OMNIA_CONFIG="${OMNIA_CONFIG:-/etc/omnia.conf}"
 
 export SPLITTER_PATH="${SPLITTER_PATH:-$(command -v rpc-splitter)}"
+export SPLITTER_CONFIG="${SPLITTER_CONFIG:-/etc/splitter.conf}"
 export SPLITTER_URLS="${SPLITTER_URLS:-""}"
 export SPLITTER_LOG_FORMAT="${SPLITTER_LOG_FORMAT:-"text"}"
 export SPLITTER_LOG_VERBOSITY="${SPLITTER_LOG_VERBOSITY:-"error"}"
@@ -93,9 +94,9 @@ $LEELOO_PATH $LEELOO_CONFIG
 $LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
 $SPLITTER_PATH $SPLITTER_URLS
 $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
-' < "$2" | sudo tee "$target" > /dev/null
+' < "$2" | sudo tee "$target" >&2
 
-	echo>&2 "$name -> $target"
+	echo >&2 "$name -> $target"
 
 	systemdCmd+="systemctl enable $name # Enable auto-start of $1 service at boot
 "
@@ -315,7 +316,7 @@ copySplitterConf() {
 										| sed 's/--eth-rpc=//' \
 										| jq -R '.' | jq -sc)"
 		if [[ -n "$_savedConfig" ]]; then
-			splitterConfigUpdates=( ".ethereum.rpc = $_savedConfig" )
+			splitterConfigUpdates=(". * {ethereum:{rpc:$_savedConfig}}")
 		fi
 	fi
 
@@ -332,6 +333,13 @@ copySplitterConf() {
 		echo >&2 "  ${splitterConfigOverrides[$i]}"
 		sudo tee "${SPLITTER_CONFIG}" <<< "$(jq "${splitterConfigOverrides[$i]}" "${SPLITTER_CONFIG}")" > /dev/null
 	done
+
+	if [[ -f "${SPLITTER_CONFIG}" ]]; then
+		local _URL
+		for _URL in $(jq -r '.ethereum.rpc[]' "${SPLITTER_CONFIG}"); do
+			SPLITTER_URLS="${SPLITTER_URLS} --eth-rpc=${_URL}"
+		done
+	fi
 
 	echo >&2 "SPLITTER_CONFIG: DONE"
 }
@@ -415,11 +423,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--eth-rpc)
-			if [[ -z "$SPLITTER_URLS" ]]; then
-				SPLITTER_URLS="--eth-rpc=$2"
-			else
-				SPLITTER_URLS="$SPLITTER_URLS --eth-rpc=$2"
-			fi
+			splitterConfigOverrides+=(".ethereum.rpc += [\"$2\"]")
 			shift
 			;;
 		--eth-rpc-arbitrum)
