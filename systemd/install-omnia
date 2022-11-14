@@ -3,32 +3,34 @@ set -eo pipefail
 
 [[ -z "$ORACLE_DEBUG" ]] || set -x
 
-SCRIPT_DIR=$(cd "${BASH_SOURCE[0]%/*}" && pwd)
-TARGET_DIR=${TARGET_DIR:-/etc/systemd/system}
+SCRIPT_DIR="$(cd "${BASH_SOURCE[0]%/*}" && pwd)"
+TARGET_DIR="${TARGET_DIR:-/etc/systemd/system}"
 SHARE_DIR="${SHARE_PATH:-$SCRIPT_DIR}"
-OMNIA_LIB_PATH=${OMNIA_LIB_PATH:-$SCRIPT_DIR/../omnia/lib}
+OMNIA_LIB_PATH="${OMNIA_LIB_PATH:-$SCRIPT_DIR/../omnia/lib}"
 OMNIA_CONF_PATH="$SCRIPT_DIR/../share"
 
-export SSB_PATH=${SSB_PATH:-$(command -v ssb-server)}
-export SSB_CONF=${SSB_CONF:-$(dirname "$(command -v ssb-server)")/.ssb/config}
+export SSB_PATH="${SSB_PATH:-$(command -v ssb-server)}"
+export SSB_CONF="${SSB_CONF:-$(dirname "$(command -v ssb-server)")/.ssb/config}"
 
-export GOFER_PATH=${GOFER_PATH:-$(command -v gofer)}
-export GOFER_CONFIG=${GOFER_CONFIG:-/etc/gofer.conf}
-export GOFER_LOG_FORMAT=${GOFER_LOG_FORMAT:-"text"}
-export GOFER_LOG_VERBOSITY=${GOFER_LOG_VERBOSITY:-"error"}
+export GOFER_PATH="${GOFER_PATH:-$(command -v gofer)}"
+export GOFER_CONFIG="${GOFER_CONFIG:-/etc/gofer.conf}"
+export GOFER_LOG_FORMAT="${GOFER_LOG_FORMAT:-"text"}"
+export GOFER_LOG_VERBOSITY="${GOFER_LOG_VERBOSITY:-"error"}"
 
-export SPIRE_PATH=${SPIRE_PATH:-$(command -v spire)}
+export SPIRE_PATH="${SPIRE_PATH:-$(command -v spire)}"
 export SPIRE_CONFIG="${SPIRE_CONFIG:-/etc/spire.conf}"
-export SPIRE_LOG_FORMAT=${SPIRE_LOG_FORMAT:-"text"}
-export SPIRE_LOG_VERBOSITY=${SPIRE_LOG_VERBOSITY:-"error"}
+export SPIRE_LOG_FORMAT="${SPIRE_LOG_FORMAT:-"text"}"
+export SPIRE_LOG_VERBOSITY="${SPIRE_LOG_VERBOSITY:-"error"}"
 
-export OMNIA_PATH=${OMNIA_PATH:-$(command -v omnia)}
+export OMNIA_PATH="${OMNIA_PATH:-$(command -v omnia)}"
 export OMNIA_CONFIG="${OMNIA_CONFIG:-/etc/omnia.conf}"
 
-export SPLITTER_PATH=${SPLITTER_PATH:-$(command -v rpc-splitter)}
+export SPLITTER_PATH="${SPLITTER_PATH:-$(command -v rpc-splitter)}"
+export SPLITTER_CONFIG="${SPLITTER_CONFIG:-/etc/splitter.conf}"
 export SPLITTER_URLS="${SPLITTER_URLS:-""}"
-export SPLITTER_LOG_FORMAT=${SPLITTER_LOG_FORMAT:-"text"}
-export SPLITTER_LOG_VERBOSITY=${SPLITTER_LOG_VERBOSITY:-"error"}
+export SPLITTER_LOG_FORMAT="${SPLITTER_LOG_FORMAT:-"text"}"
+export SPLITTER_LOG_VERBOSITY="${SPLITTER_LOG_VERBOSITY:-"error"}"
+SPLITTER_RPC_ADDR="127.0.0.1:9989"
 
 export LEELOO_PATH=${LEELOO_PATH:-$(command -v leeloo)}
 export LEELOO_CONFIG=${LEELOO_CONFIG:-/etc/leeloo.conf}
@@ -92,9 +94,9 @@ $LEELOO_PATH $LEELOO_CONFIG
 $LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
 $SPLITTER_PATH $SPLITTER_URLS
 $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
-' < "$2" | sudo tee "$target" > /dev/null
+' < "$2" | sudo tee "$target" >&2
 
-	echo>&2 "$name -> $target"
+	echo >&2 "$name -> $target"
 
 	systemdCmd+="systemctl enable $name # Enable auto-start of $1 service at boot
 "
@@ -107,6 +109,8 @@ $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
 	fi
 }
 
+declare -a configUpdates
+declare -a configOverrides
 copyOmniaConf() {
 	echo >&2 "OMNIA_CONFIG: START"
 
@@ -122,7 +126,7 @@ copyOmniaConf() {
 	sudo chmod u+w "$OMNIA_CONFIG"
 
 	configUpdates+=('.options.logFormat = "text"')
-	configOverrides+=('.options.setzerEthRpcUrl = "http://127.0.0.1:9989"')
+	configOverrides+=(".options.setzerEthRpcUrl = \"http://${SPLITTER_RPC_ADDR}\"")
 
 	for i in "${!configUpdates[@]}"; do
 		echo >&2 "${configUpdates[$i]}"
@@ -135,9 +139,8 @@ copyOmniaConf() {
 
 	echo >&2 "OMNIA_CONFIG: DONE"
 }
-declare -a configUpdates
-declare -a configOverrides
 
+declare -a ssbConfigUpdates
 copySsbConf() {
 	echo >&2 "SSB_CONF: START"
 	ssbConfigUpdates+=(".friends.hops = (.friends.hops // 6)")
@@ -179,8 +182,9 @@ copySsbConf() {
 
 	echo >&2 "SSB_CONF: DONE"
 }
-declare -a ssbConfigUpdates
 
+declare -a spireConfigUpdates
+declare -a spireConfigOverrides
 copySpireConf() {
 	echo >&2 "SPIRE_CONFIG: START"
 
@@ -211,9 +215,9 @@ copySpireConf() {
 
 	echo >&2 "SPIRE_CONFIG: DONE"
 }
-declare -a spireConfigUpdates
-declare -a spireConfigOverrides
 
+declare -a leelooConfigUpdates
+declare -a leelooConfigOverrides
 copyLeelooConf() {
 	echo >&2 "LEELOO_CONFIG: START"
 
@@ -254,9 +258,9 @@ copyLeelooConf() {
 
 	echo >&2 "LEELOO_CONFIG: DONE"
 }
-declare -a leelooConfigUpdates
-declare -a leelooConfigOverrides
 
+declare -a goferConfigUpdates
+declare -a goferConfigOverrides
 copyGoferConf() {
 	echo >&2 "GOFER_CONFIG: START"
 
@@ -269,14 +273,14 @@ copyGoferConf() {
 		local _savedConfig
 		_savedConfig="$(jq '{ethereum,gofer:{origins:{openexchangerates:{params:{apiKey:.gofer.origins.openexchangerates.params.apiKey}}}}} | del(.. | nulls)' "$GOFER_CONFIG")"
 		if [[ -n "$_savedConfig" ]]; then
-			goferConfigOverrides=( ". * $_savedConfig" )
+			goferConfigUpdates=( ". * $_savedConfig" )
 		fi
 	fi
 
 	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
 	sudo chmod u+w "$GOFER_CONFIG"
 
-	goferConfigOverrides+=('.ethereum.rpc = "http://127.0.0.1:9989"')
+	goferConfigOverrides+=(".ethereum.rpc = \"http://${SPLITTER_RPC_ADDR}\"")
 
 	for i in "${!goferConfigUpdates[@]}"; do
 		echo >&2 "  ${goferConfigUpdates[$i]}"
@@ -289,15 +293,64 @@ copyGoferConf() {
 
 	echo >&2 "GOFER_CONFIG: DONE"
 }
-declare -a goferConfigUpdates
-declare -a goferConfigOverrides
+
+declare -a splitterConfigUpdates
+declare -a splitterConfigOverrides
+copySplitterConf() {
+	echo >&2 "SPLITTER_CONFIG: START"
+
+	if [[ -f "${SPLITTER_CONFIG%.conf}.json" ]]
+	then
+		sudo mv -f "${SPLITTER_CONFIG%.conf}.json" "${SPLITTER_CONFIG}"
+	fi
+
+	if [[ -f "${SPLITTER_CONFIG}" ]]; then
+		local _savedConfig
+		_savedConfig="$(jq '{ethereum} | del(.. | nulls)' "${SPLITTER_CONFIG}")"
+		if [[ -n "$_savedConfig" ]]; then
+			splitterConfigUpdates=( ". * $_savedConfig" )
+		fi
+	elif [[ -f /etc/systemd/system/splitter-agent.service ]]; then
+		local _savedConfig
+		_savedConfig="$(grep -Eo '\-\-eth-rpc=([^[:space:]]+)' /etc/systemd/system/splitter-agent.service \
+										| sed 's/--eth-rpc=//' \
+										| jq -R '.' | jq -sc)"
+		if [[ -n "$_savedConfig" ]]; then
+			splitterConfigUpdates=(". * {ethereum:{rpc:$_savedConfig}}")
+		fi
+	fi
+
+	sudo cp -v "$SHARE_DIR/splitter.json" "${SPLITTER_CONFIG}" >&2
+	sudo chmod u+w "${SPLITTER_CONFIG}"
+
+	splitterConfigOverrides+=(".splitter.rpc.address = \"${SPLITTER_RPC_ADDR}\"")
+
+	for i in "${!splitterConfigUpdates[@]}"; do
+		echo >&2 "  ${splitterConfigUpdates[$i]}"
+		sudo tee "${SPLITTER_CONFIG}" <<< "$(jq "${splitterConfigUpdates[$i]}" "${SPLITTER_CONFIG}")" > /dev/null
+	done
+	for i in "${!splitterConfigOverrides[@]}"; do
+		echo >&2 "  ${splitterConfigOverrides[$i]}"
+		sudo tee "${SPLITTER_CONFIG}" <<< "$(jq "${splitterConfigOverrides[$i]}" "${SPLITTER_CONFIG}")" > /dev/null
+	done
+
+	if [[ -f "${SPLITTER_CONFIG}" ]]; then
+		local _URL
+		for _URL in $(jq -r '.ethereum.rpc[]' "${SPLITTER_CONFIG}"); do
+			SPLITTER_URLS="${SPLITTER_URLS} --eth-rpc=${_URL}"
+		done
+	fi
+
+	echo >&2 "SPLITTER_CONFIG: DONE"
+}
 
 installConfigs() {
 	copyOmniaConf "$installType.conf"
 	copySsbConf
-	copySpireConf
+	copySplitterConf
 	copyGoferConf
 	copyLeelooConf
+	copySpireConf
 }
 
 installServices() {
@@ -370,11 +423,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--eth-rpc)
-			if [[ -z "$SPLITTER_URLS" ]]; then
-				SPLITTER_URLS="--eth-rpc=$2"
-			else
-				SPLITTER_URLS="$SPLITTER_URLS --eth-rpc=$2"
-			fi
+			splitterConfigOverrides+=(".ethereum.rpc += [\"$2\"]")
 			shift
 			;;
 		--eth-rpc-arbitrum)
