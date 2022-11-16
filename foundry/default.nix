@@ -23,18 +23,9 @@
     stripRoot = false;
   };
 
-  nativeBuildInputs = [
-    coreutils
-    rustc cargo
-    pkg-config
-    openssl
-  ] ++ lib.optionals stdenv.isLinux [
-    autoPatchelfHook
-  ];
-
   installPhase = ''
     mkdir -p $out/bin
-    mv cast $out/bin/
+    cp $src/cast $out/bin/
   '';
 
 #  installCheckPhase = ''
