@@ -34,7 +34,7 @@ in rec {
   ethsign = pkgs.callPackage (import "${sources.omnia}/ethsign") { };
   foundry = pkgs.callPackage ../foundry { inherit (nixpkgs2) pkgs; };
 
-  omnia = pkgs.callPackage ../../omnia {
+  omnia = pkgs.callPackage sources.omnia {
     inherit ssb-server oracle-suite setzer ethsign foundry;
     oracleVersion = pkgs.lib.fileContents ../version;
   };
