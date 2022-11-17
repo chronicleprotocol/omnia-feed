@@ -66,6 +66,16 @@
           "blocksLimit": 1000,
           "addresses": ["0x5dBaf6F2bEDebd414F8d78d13499222347e59D5E","0x0aB5d9f2635e16b4a8900b04591dc478aEc29F3E"]
         }
+      ],
+      "teleportStarknet": [
+        {
+          "label": "starknet mainnet teleport gateways",
+          "sequencer": "https://alpha-mainnet.starknet.io",
+          "interval": 60,
+          "prefetchPeriod": 604800,
+          "replayAfter": [60, 300, 1800, 3600, 21600, 43200, 64800, 86400, 108000, 129600, 151200, 172800, 194400, 216000, 237600, 259200, 280800, 302400, 324000, 345600, 367200, 388800, 410400, 432000, 453600, 475200, 496800, 518400, 540000, 561600, 583200],
+          "addresses": ["0x05b20d8c7b85456c07bdb8eaaeab52a6bf3770a586af6da8d3f5071ef0dcf234", "0x070077337f82db40b34adc7458761ec193d6ab7444f3da5b44d750afdd065d4f"]
+        }
       ]
     }
   }
