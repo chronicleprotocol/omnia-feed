@@ -72,39 +72,39 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "feature/sc-1373-update-oralces-dependencies-to-include-cast",
+        "branch": "release/1.14.0-sc-1306",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "ad9eb98c83bf28fcb5eff69cf1205be5ed11f5a0",
-        "sha256": "0q3754gkz1li7l8cjsvh4m9nbaqk2d29qk8rpsg64jf702r1swlg",
+        "rev": "4917f6bc4959cb906425983a8b3b3af46c450ff1",
+        "sha256": "0hc01gf7nclws286fv1616n67sj974zv5d8pcpl95dffgl8xhkyd",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/ad9eb98c83bf28fcb5eff69cf1205be5ed11f5a0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/4917f6bc4959cb906425983a8b3b3af46c450ff1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "master",
+        "branch": "release/0.8.0-sc-1306",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "v0.7.2",
-        "sha256": "1vaq30l4ckdy2ywlwrkbl9ysi1w971xn570s4rcm2872bf30xkrv",
+        "rev": "714ef7934ce9cd35076bacb31f53062017d632e7",
+        "sha256": "05ji3sfb8dq93p8q16sxc9f8n0cbmi35k73d0vigkwl6lmsi0c4r",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/v0.7.2.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/714ef7934ce9cd35076bacb31f53062017d632e7.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
-        "branch": "master",
+        "branch": "release/0.7.0-sc-1306",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "setzer",
-        "rev": "v0.6.1",
-        "sha256": "1gvk20glqb69skdb4abx785bpjshcinv679xiahjjy7fpm0jsp99",
+        "rev": "2691791ffe2242075d6306ecb49feba8417681e6",
+        "sha256": "1qcm8xf3h79llxy8wlxmh5qxc8vygpjkhppgxv5aafjcmd2373b6",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/setzer/archive/v0.6.1.tar.gz",
+        "url": "https://github.com/chronicleprotocol/setzer/archive/2691791ffe2242075d6306ecb49feba8417681e6.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
