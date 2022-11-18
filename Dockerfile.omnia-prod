@@ -13,7 +13,6 @@ COPY omnia /src/omnia
 COPY tests/lib/tap.sh /src/omnia
 COPY nix /src/nix
 COPY docker /src/docker
-COPY starkware /src/starkware
 COPY systemd/ssb-config.json /src/ssb-config.json
 COPY ssb-server /src/ssb-server
 

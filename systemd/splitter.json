@@ -1,0 +1,10 @@
+{
+  "ethereum": {
+    "rpc": []
+  },
+  "splitter": {
+    "rpc": {
+      "address": ""
+    }
+  }
+}

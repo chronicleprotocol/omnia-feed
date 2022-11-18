@@ -3,26 +3,18 @@ let
 
   sources = import ./sources.nix;
 
-  inherit (import sources.nixpkgs {
-    overlays = [
-      (self: super: { inherit (import "${sources.dapptools}/overlay.nix" self super) hevm seth; })
-      (self: super: { ethsign = (self.callPackage (import "${sources.omnia}/ethsign") { }); })
-      (self: super: (super // { dapptoolsSrc = ./.; })) # hacky but works - TODO: suggest to daptools to not use it in seth
-    ];
-  })
-    pkgs;
-
+  nixpkgs = import sources.nixpkgs { };
+  inherit (nixpkgs) pkgs;
   inherit (pkgs.lib.strings) removePrefix;
 
   getName = x: let parse = drv: (builtins.parseDrvName drv).name; in if isString x then parse x else x.pname or (parse x.name);
   ssb-patches = ../ssb-server;
+  nixpkgs2 = import sources.nixpkgs2 { };
 in rec {
   inherit pkgs;
 
-  makerpkgs = import sources.makerpkgs { };
-
   nodepkgs = let
-    nodepkgs' = import ./nodepkgs.nix { pkgs = pkgs // { stdenv = pkgs.stdenv // { lib = pkgs.lib; }; }; };
+    nodepkgs' = import ./nodepkgs.nix { pkgs = pkgs // { stdenv = pkgs.stdenv // { inherit (pkgs) lib; }; }; };
     shortNames = listToAttrs (map (x: {
       name = removePrefix "node_" (getName x.name);
       value = x;
@@ -37,12 +29,13 @@ in rec {
     '';
   };
 
-  oracle-suite = pkgs.callPackage sources.oracle-suite { buildGoModule = (import sources.nixpkgs2 { }).buildGo118Module; };
-
+  oracle-suite = pkgs.callPackage sources.oracle-suite { buildGoModule = nixpkgs2.buildGo118Module; };
   setzer = pkgs.callPackage sources.setzer { };
+  ethsign = pkgs.callPackage (import "${sources.omnia}/ethsign") { };
+  foundry = pkgs.callPackage (import ../foundry) { inherit (nixpkgs2) pkgs; };
 
   omnia = pkgs.callPackage sources.omnia {
-    inherit ssb-server oracle-suite setzer;
+    inherit ssb-server oracle-suite setzer ethsign foundry;
     oracleVersion = pkgs.lib.fileContents ../version;
   };
 
