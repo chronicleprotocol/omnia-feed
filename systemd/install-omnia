@@ -575,7 +575,6 @@ while [[ -n "$1" ]]; do
 done
 
 installConfigs
-
 installServices
 
 echo >&2 "To (re)start Omnia now (and auto-start on reboot) run:"
