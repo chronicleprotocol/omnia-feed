@@ -1,11 +1,11 @@
 { pkgs }: let
-  rev = "b65d58d8f634137c61d8334ecfa81711e77496c6";
+  rev = "cb925b100b400b27875ad0667c2bec7e8d55d89c";
 in with pkgs; stdenv.mkDerivation rec {
   pname = "foundry";
-  version = "0.0.0-${lib.substring 0 7 rev}-0";
+  version = "0.0.0-${lib.substring 0 5 rev}";
   src = fetchzip {
     url = "https://github.com/foundry-rs/foundry/releases/download/nightly-${rev}/foundry_nightly_linux_amd64.tar.gz";
-    sha256 = "sha256-2isjF7yINVrhD+aW80c37ldD0q/Obf6YhqS/JB/kRJk=";
+    sha256 = "sha256-TnlcU2wt1ml5lH25jYg1ZI0BXgO9FB08Lzf5i32609c=";
     stripRoot = false;
   };
 
