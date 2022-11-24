@@ -52,7 +52,7 @@
         "type": "openexchangerates",
         "name": "openexchangerates",
         "params": {
-          "apiKey": "API_KEY"
+          "apiKey": "${GOFER_OPENEXCHANGERATES_API_KEY-}"
         }
       },
       "poloniex": {
