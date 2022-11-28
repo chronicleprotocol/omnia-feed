@@ -123,7 +123,7 @@ copyOmniaConf() {
 	fi
 
 	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
-	sudo chmod u+w "$OMNIA_CONFIG"
+	sudo chmod u+w "$OMNIA_CONFIG" >&2
 
 	configUpdates+=('.options.logFormat = "text"')
 	configOverrides+=(".options.setzerEthRpcUrl = \"http://${SPLITTER_RPC_ADDR}\"")
@@ -201,8 +201,7 @@ copySpireConf() {
 	fi
 
 	sudo cp -v "$SHARE_DIR/spire.json" "$SPIRE_CONFIG" >&2
-	sudo chmod u+w "$SPIRE_CONFIG"
-
+	sudo chmod u+w "$SPIRE_CONFIG" >&2
 
 	for i in "${!spireConfigUpdates[@]}"; do
 		echo >&2 "  ${spireConfigUpdates[$i]}"
@@ -242,10 +241,10 @@ copyLeelooConf() {
 		local _eth
 		_eth="$(jq -c '.ethereum' <<<"${_savedConfig}")"
 		leelooConfigUpdates+=(".ethereum = ${_eth}")
-	else
-		sudo cp -v "$SHARE_DIR/leeloo.json" "$LEELOO_CONFIG" >&2
-		sudo chmod u+w "$LEELOO_CONFIG" >&2
 	fi
+
+	sudo cp -v "$SHARE_DIR/leeloo.json" "$LEELOO_CONFIG" >&2
+	sudo chmod u+w "$LEELOO_CONFIG" >&2
 
 	for i in "${!leelooConfigUpdates[@]}"; do
 		echo >&2 "  ${leelooConfigUpdates[$i]}"
@@ -278,7 +277,7 @@ copyGoferConf() {
 	fi
 
 	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
-	sudo chmod u+w "$GOFER_CONFIG"
+	sudo chmod u+w "$GOFER_CONFIG" >&2
 
 	goferConfigOverrides+=(".ethereum.rpc = \"http://${SPLITTER_RPC_ADDR}\"")
 
@@ -321,7 +320,7 @@ copySplitterConf() {
 	fi
 
 	sudo cp -v "$SHARE_DIR/splitter.json" "${SPLITTER_CONFIG}" >&2
-	sudo chmod u+w "${SPLITTER_CONFIG}"
+	sudo chmod u+w "${SPLITTER_CONFIG}" >&2
 
 	splitterConfigOverrides+=(".splitter.rpc.address = \"${SPLITTER_RPC_ADDR}\"")
 
