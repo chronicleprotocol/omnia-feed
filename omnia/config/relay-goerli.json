@@ -1,49 +1,44 @@
 {
-  "mode": "relay",
   "ethereum": {
     "from": "",
-    "keystore": "",
-    "password": "",
-    "network": "",
     "gasPrice": {
-      "source": "node",
-      "maxPriceMultiplier": 2,
-      "tipMultiplier": 1,
-      "priority": "fast"
+      "multiplier": 1,
+      "source": "node"
     },
-    "type": "ethereum"
+    "keystore": "",
+    "network": "",
+    "password": ""
   },
-  "sources": [],
-  "transports": [
-    "ssb",
-    "spire"
-  ],
   "feeds": [
-    "0x0c4FC7D66b7b6c684488c1F218caA18D4082da18",
     "0x5C01f0F08E54B85f4CaB8C6a03c9425196fe66DD",
     "0x75FBD0aaCe74Fb05ef0F6C0AC63d26071Eb750c9",
+    "0x0c4FC7D66b7b6c684488c1F218caA18D4082da18",
     "0xC50DF8b5dcb701aBc0D6d1C7C99E6602171Abbc4"
   ],
-  "services": {
-    "scuttlebotIdMap": {
-      "0x0c4FC7D66b7b6c684488c1F218caA18D4082da18": "@4ltZDRGFi4eHGGlXmLC8olcEs8XNZCXfvx+3V3S2HgY=.ed25519",
-      "0x5C01f0F08E54B85f4CaB8C6a03c9425196fe66DD": "@uqOcvBdpBXWNCm5WhjALbtyR8szWpihH/CVyNdycncQ=.ed25519",
-      "0x75FBD0aaCe74Fb05ef0F6C0AC63d26071Eb750c9": "@wrrCKd56pV5CNSVh+fkVh6iaRUG6VA5I5VDEo8XOn5E=.ed25519",
-      "0xC50DF8b5dcb701aBc0D6d1C7C99E6602171Abbc4": "@gt/2QK1AdSCLX3zRJQV6wRRsoxgohChCpjmNOOLUAA4=.ed25519"
-    }
-  },
+  "mode": "relay",
   "options": {
+    "debug": false,
+    "goferConfig": "",
     "interval": 60,
-    "msgLimit": 35,
-    "verbose": true,
     "logFormat": "json",
-    "ethGas": 200000,
-    "setzerEthRpcUrl": ""
+    "msgLimit": 35,
+    "setzerCacheExpiry": 120,
+    "setzerMinMedian": 3,
+    "setzerTimeout": 10,
+    "spireConfig": "",
+    "srcTimeout": 10,
+    "verbose": true
   },
   "pairs": {
     "BTC/USD": {
       "msgExpiration": 1800,
       "oracle": "0x586409bb88cF89BBAB0e106b0620241a0e4005c9",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "ETH/BTC": {
+      "msgExpiration": 1800,
+      "oracle": "0xaF495008d177a2E2AD95125b78ace62ef61Ed1f7",
       "oracleExpiration": 14400,
       "oracleSpread": 3
     },
@@ -57,7 +52,7 @@
       "msgExpiration": 1800,
       "oracle": "0x0cd01b018C355a60B2Cc68A1e3d53853f05A7280",
       "oracleExpiration": 14400,
-      "oracleSpread": 4
+      "oracleSpread": 3
     },
     "LINK/USD": {
       "msgExpiration": 1800,
@@ -95,5 +90,21 @@
       "oracleExpiration": 14400,
       "oracleSpread": 3
     }
-  }
+  },
+  "services": {
+    "scuttlebotIdMap": {
+      "0x5C01f0F08E54B85f4CaB8C6a03c9425196fe66DD": "@uqOcvBdpBXWNCm5WhjALbtyR8szWpihH/CVyNdycncQ=.ed25519",
+      "0x75FBD0aaCe74Fb05ef0F6C0AC63d26071Eb750c9": "@wrrCKd56pV5CNSVh+fkVh6iaRUG6VA5I5VDEo8XOn5E=.ed25519",
+      "0x0c4FC7D66b7b6c684488c1F218caA18D4082da18": "@4ltZDRGFi4eHGGlXmLC8olcEs8XNZCXfvx+3V3S2HgY=.ed25519",
+      "0xC50DF8b5dcb701aBc0D6d1C7C99E6602171Abbc4": "@gt/2QK1AdSCLX3zRJQV6wRRsoxgohChCpjmNOOLUAA4=.ed25519"
+    }
+  },
+  "sources": [
+    "gofer",
+    "setzer"
+  ],
+  "transports": [
+    "spire",
+    "ssb"
+  ]
 }
