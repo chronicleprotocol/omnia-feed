@@ -1,0 +1,110 @@
+{
+  "ethereum": {
+    "from": "",
+    "gasPrice": {
+      "multiplier": 1,
+      "source": "node"
+    },
+    "keystore": "",
+    "network": "",
+    "password": ""
+  },
+  "feeds": [
+    "0x5C01f0F08E54B85f4CaB8C6a03c9425196fe66DD",
+    "0x75FBD0aaCe74Fb05ef0F6C0AC63d26071Eb750c9",
+    "0x0c4FC7D66b7b6c684488c1F218caA18D4082da18",
+    "0xC50DF8b5dcb701aBc0D6d1C7C99E6602171Abbc4"
+  ],
+  "mode": "relay",
+  "options": {
+    "debug": false,
+    "goferConfig": "",
+    "interval": 60,
+    "logFormat": "json",
+    "msgLimit": 35,
+    "setzerCacheExpiry": 120,
+    "setzerMinMedian": 3,
+    "setzerTimeout": 10,
+    "spireConfig": "",
+    "srcTimeout": 10,
+    "verbose": true
+  },
+  "pairs": {
+    "BTC/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0x586409bb88cF89BBAB0e106b0620241a0e4005c9",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "ETH/BTC": {
+      "msgExpiration": 1800,
+      "oracle": "0xaF495008d177a2E2AD95125b78ace62ef61Ed1f7",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "ETH/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0xD81834Aa83504F6614caE3592fb033e4b8130380",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "GNO/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0x0cd01b018C355a60B2Cc68A1e3d53853f05A7280",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "LINK/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0xe4919256D404968566cbdc5E5415c769D5EeBcb0",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "MANA/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0xCCce898497e139831523cc9D23c948138dDF67f6",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "MATIC/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0x4b4e2A0b7a560290280F083c8b5174FB706D7926",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "RETH/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0x7eEE7e44055B6ddB65c6C970B061EC03365FADB3",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "WSTETH/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0x9466e1ffA153a8BdBB5972a7217945eb2E28721f",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    },
+    "YFI/USD": {
+      "msgExpiration": 1800,
+      "oracle": "0x38D27Ba21E1B2995d0ff9C1C070c5c93dd07cB31",
+      "oracleExpiration": 14400,
+      "oracleSpread": 3
+    }
+  },
+  "services": {
+    "scuttlebotIdMap": {
+      "0x5C01f0F08E54B85f4CaB8C6a03c9425196fe66DD": "@uqOcvBdpBXWNCm5WhjALbtyR8szWpihH/CVyNdycncQ=.ed25519",
+      "0x75FBD0aaCe74Fb05ef0F6C0AC63d26071Eb750c9": "@wrrCKd56pV5CNSVh+fkVh6iaRUG6VA5I5VDEo8XOn5E=.ed25519",
+      "0x0c4FC7D66b7b6c684488c1F218caA18D4082da18": "@4ltZDRGFi4eHGGlXmLC8olcEs8XNZCXfvx+3V3S2HgY=.ed25519",
+      "0xC50DF8b5dcb701aBc0D6d1C7C99E6602171Abbc4": "@gt/2QK1AdSCLX3zRJQV6wRRsoxgohChCpjmNOOLUAA4=.ed25519"
+    }
+  },
+  "sources": [
+    "gofer",
+    "setzer"
+  ],
+  "transports": [
+    "spire",
+    "ssb"
+  ]
+}

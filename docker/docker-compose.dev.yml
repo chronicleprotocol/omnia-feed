@@ -49,7 +49,7 @@ services:
       - ./ssb/relay:/root/.ssb/secret
     environment:
       <<: *env
-      OMNIA_FILE_SET: /src/omnia/config/relay-testchain.conf
+      OMNIA_FILE_SET: /src/omnia/config/relay-testchain.json
       OMNIA_STR_ethereum_from: "0x436177e390e835959c82afc56e063bd032ad57fb"
       SSB_STR_connections_incoming_net__external: relay
       SSB_STR_connections_incoming_ws__external: relay
