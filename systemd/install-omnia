@@ -296,15 +296,16 @@ installConfigs() {
 	copyOmniaConf "$installType.conf"
 	copySsbConf
 	copySpireConf
-	copyGoferConf
-	copyLeelooConf
+	[[ "$installType" == "feed" ]] && copySplitterConf
+	[[ "$installType" == "feed" ]] && copyGoferConf
+	[[ "$installType" == "feed" ]] && copyLeelooConf
 }
 
 installServices() {
+	[[ "$installType" == "feed" ]] && subst leeloo-agent "$SHARE_DIR"/leeloo-agent.service
+	[[ "$installType" == "feed" ]] && subst gofer-agent "$SHARE_DIR"/gofer-agent.service
+	[[ "$installType" == "feed" ]] && subst splitter-agent "$SHARE_DIR"/splitter-agent.service
 	subst spire-agent "$SHARE_DIR"/spire-agent.service
-	subst leeloo-agent "$SHARE_DIR"/leeloo-agent.service
-	subst gofer-agent "$SHARE_DIR"/gofer-agent.service
-	subst splitter-agent "$SHARE_DIR"/splitter-agent.service
 	subst ssb-server "$SHARE_DIR"/ssb-server.service
 	subst omnia "$SHARE_DIR"/omnia.service
 }
@@ -526,7 +527,6 @@ while [[ -n "$1" ]]; do
 done
 
 installConfigs
-
 installServices
 
 echo >&2 "To (re)start Omnia now (and auto-start on reboot) run:"
