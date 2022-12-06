@@ -17,7 +17,7 @@
     "logFormat": "text"
   },
   "sources":["gofer","setzer"],
-  "transports":["spire","ssb"],
+  "transports":["spire","ssb-rpc"],
   "pairs": {
     "BTC/USD":{"msgExpiration":1800,"msgSpread":0.5},
     "ETH/BTC":{"msgExpiration":1800,"msgSpread":0.5},

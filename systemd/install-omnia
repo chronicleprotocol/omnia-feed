@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "${BASH_SOURCE[0]%/*}" && pwd)"
 TARGET_DIR="${TARGET_DIR:-/etc/systemd/system}"
 SHARE_DIR="${SHARE_PATH:-$SCRIPT_DIR}"
 OMNIA_LIB_PATH="${OMNIA_LIB_PATH:-$SCRIPT_DIR/../omnia/lib}"
-OMNIA_CONF_PATH="$SCRIPT_DIR/../share"
+OMNIA_CONF_PATH="$SCRIPT_DIR/../omnia/config"
 
 export SSB_PATH="${SSB_PATH:-$(command -v ssb-server)}"
 export SSB_CONF="${SSB_CONF:-$(dirname "$(command -v ssb-server)")/.ssb/config}"
@@ -30,7 +30,7 @@ export SPLITTER_CONFIG="${SPLITTER_CONFIG:-/etc/splitter.conf}"
 export SPLITTER_URLS="${SPLITTER_URLS:-""}"
 export SPLITTER_LOG_FORMAT="${SPLITTER_LOG_FORMAT:-"text"}"
 export SPLITTER_LOG_VERBOSITY="${SPLITTER_LOG_VERBOSITY:-"error"}"
-export SPLITTER_RPC_ADDR="${SPLITTER_RPC_ADDR:-"127.0.0.1:9989"}"
+export SPLITTER_RPC_ADDR="${SPLITTER_RPC_ADDR:-"rpc-splitter.local:9989"}"
 
 export LEELOO_PATH=${LEELOO_PATH:-$(command -v leeloo)}
 export LEELOO_CONFIG=${LEELOO_CONFIG:-/etc/leeloo.conf}
@@ -112,7 +112,7 @@ $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
 declare -a configUpdates
 declare -a configOverrides
 copyOmniaConf() {
-	echo >&2 "OMNIA_CONFIG: START"
+	echo >&2 "OMNIA_CONFIG: START ${OMNIA_CONFIG}"
 
 	if [[ -f "$OMNIA_CONFIG" ]]; then
 		local _savedConfig
@@ -520,7 +520,7 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--ssb-external)
-			ssbConfigUpdates+=(".connections.incoming[\"net\",\"ws\"][].external = \"$2\"")
+			ssbConfigUpdates+=(".connections.incoming[\"net\",\"ws\"][0].external = \"$2\"")
 			shift
 			;;
 		--ssb-caps)
@@ -532,11 +532,11 @@ while [[ -n "$1" ]]; do
 			shift
 			;;
 		--ssb-port)
-			ssbConfigUpdates+=(".connections.incoming[\"net\"][].port = \"$2\"")
+			ssbConfigUpdates+=(".connections.incoming[\"net\"][0].port = \"$2\"")
 			shift
 			;;
 		--ssb-port-ws)
-			ssbConfigUpdates+=(".connections.incoming[\"ws\"][].port = \"$2\"")
+			ssbConfigUpdates+=(".connections.incoming[\"ws\"][0].port = \"$2\"")
 			shift
 			;;
 		--ssb-gossip)
@@ -575,7 +575,7 @@ while [[ -n "$1" ]]; do
 done
 
 installConfigs
-installServices
+# installServices
 
 echo >&2 "To (re)start Omnia now (and auto-start on reboot) run:"
 echo "systemctl daemon-reload # Reload systemd services"

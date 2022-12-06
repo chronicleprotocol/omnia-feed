@@ -1,7 +1,10 @@
 {
   "connections": {
     "incoming": {
-      "net": [{"port":8007,"scope":["public","local"],"transform":"shs"}],
+      "net": [
+        {"port":8007,"scope":["public","local"],"transform":"shs"},
+        {"port":8098,"scope":["local"],"transform":"shs","external":"ssb-server.local"}
+      ],
       "ws": [{"port":8988,"scope":["public","local"],"transform":"shs"}]
     }
   },

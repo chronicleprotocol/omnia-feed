@@ -40,7 +40,7 @@
   ],
   "spire": {
     "rpc": {
-      "address": "127.0.0.1:8082"
+      "address": "${CFG_SPIRE_RPC_ADDR-127.0.0.1:9100}"
     },
     "pairs": [
       "BTCUSD",
