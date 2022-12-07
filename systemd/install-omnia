@@ -369,9 +369,6 @@ case "$1" in
 	feed)
 		installType="feed"
 		;;
-	relay)
-		installType="relay"
-		;;
 	help | --help | -h)
 		usage
 		;;
