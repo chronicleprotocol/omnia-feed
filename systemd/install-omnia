@@ -30,7 +30,7 @@ export SPLITTER_CONFIG="${SPLITTER_CONFIG:-/etc/splitter.conf}"
 export SPLITTER_URLS="${SPLITTER_URLS:-""}"
 export SPLITTER_LOG_FORMAT="${SPLITTER_LOG_FORMAT:-"text"}"
 export SPLITTER_LOG_VERBOSITY="${SPLITTER_LOG_VERBOSITY:-"error"}"
-SPLITTER_RPC_ADDR="127.0.0.1:9989"
+export SPLITTER_RPC_ADDR="${SPLITTER_RPC_ADDR:-"127.0.0.1:9989"}"
 
 export LEELOO_PATH=${LEELOO_PATH:-$(command -v leeloo)}
 export LEELOO_CONFIG=${LEELOO_CONFIG:-/etc/leeloo.conf}
@@ -344,29 +344,30 @@ copySplitterConf() {
 }
 
 installConfigs() {
-	copyOmniaConf "$installType.conf"
+	echo "INSTALL CONFIGS: START"
+	copyOmniaConf "$installType.json"
 	copySsbConf
-	copySplitterConf
-	copyGoferConf
-	copyLeelooConf
 	copySpireConf
+	[[ "$installType" == "feed" ]] && copySplitterConf
+	[[ "$installType" == "feed" ]] && copyGoferConf
+	[[ "$installType" == "feed" ]] && copyLeelooConf
+	echo "INSTALL CONFIGS: DONE"
 }
 
 installServices() {
+	echo "INSTALL SERVICES: START"
+	[[ "$installType" == "feed" ]] && subst leeloo-agent "$SHARE_DIR"/leeloo-agent.service
+	[[ "$installType" == "feed" ]] && subst gofer-agent "$SHARE_DIR"/gofer-agent.service
+	[[ "$installType" == "feed" ]] && subst splitter-agent "$SHARE_DIR"/splitter-agent.service
 	subst spire-agent "$SHARE_DIR"/spire-agent.service
-	subst leeloo-agent "$SHARE_DIR"/leeloo-agent.service
-	subst gofer-agent "$SHARE_DIR"/gofer-agent.service
-	subst splitter-agent "$SHARE_DIR"/splitter-agent.service
 	subst ssb-server "$SHARE_DIR"/ssb-server.service
 	subst omnia "$SHARE_DIR"/omnia.service
+	echo "INSTALL SERVICES: DONE"
 }
 
 case "$1" in
 	feed)
 		installType="feed"
-		;;
-	relay)
-		installType="relay"
 		;;
 	help | --help | -h)
 		usage
