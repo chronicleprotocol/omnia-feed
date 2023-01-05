@@ -356,12 +356,7 @@ installConfigs() {
 
 installServices() {
 	echo "INSTALL SERVICES: START"
-	[[ "$installType" == "feed" ]] && subst leeloo-agent "$SHARE_DIR"/leeloo-agent.service
-	[[ "$installType" == "feed" ]] && subst gofer-agent "$SHARE_DIR"/gofer-agent.service
-	[[ "$installType" == "feed" ]] && subst splitter-agent "$SHARE_DIR"/splitter-agent.service
-	subst spire-agent "$SHARE_DIR"/spire-agent.service
-	subst ssb-server "$SHARE_DIR"/ssb-server.service
-	subst omnia "$SHARE_DIR"/omnia.service
+	subst docker-omnia "$SHARE_DIR"/docker-omnia.service
 	echo "INSTALL SERVICES: DONE"
 }
 
@@ -576,7 +571,7 @@ while [[ -n "$1" ]]; do
 done
 
 installConfigs
-# installServices
+installServices
 
 echo >&2 "To (re)start Omnia now (and auto-start on reboot) run:"
 echo "systemctl daemon-reload # Reload systemd services"
