@@ -12,7 +12,6 @@ WorkingDirectory=/home/terra
 ExecStart=/usr/local/bin/docker-compose up -d
 ExecStop=/usr/local/bin/docker-compose down
 TimeoutStartSec=0
-Restart=always
 RestartSec=30
 
 [Install]
