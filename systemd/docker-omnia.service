@@ -1,0 +1,19 @@
+[Unit]
+Description=Dockerised Omnia
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+User=$USER
+Group=$USER
+WorkingDirectory=/home/terra
+ExecStart=/usr/local/bin/docker-compose up -d
+ExecStop=/usr/local/bin/docker-compose down
+TimeoutStartSec=0
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
