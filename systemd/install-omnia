@@ -434,16 +434,6 @@ while [[ -n "$1" ]]; do
 			leelooConfigOverrides+=(".leeloo.listeners.teleportEVM[0].ethereum.rpc += [\"$2\"]")
 			shift
 			;;
-		--feed-list)
-			configOverrides+=(".feeds = $2")
-			spireConfigOverrides+=(".feeds = $2")
-			leelooConfigOverrides+=(".feeds = $2")
-			shift
-			;;
-		--feed-map)
-			configOverrides+=(".services.scuttlebotIdMap = $2")
-			shift
-			;;
 		--from)
 			configOverrides+=(".ethereum.from = \"$2\"")
 			spireConfigOverrides+=(".ethereum.from = \"$2\"")
@@ -474,6 +464,16 @@ while [[ -n "$1" ]]; do
 			leelooConfigOverrides+=(".logger = $2")
 			spireConfigOverrides+=(".logger = $2")
 			goferConfigOverrides+=(".logger = $2")
+			shift
+			;;
+		--feed-list)
+			configOverrides+=(".feeds = $2")
+			spireConfigOverrides+=(".feeds += $2")
+			leelooConfigOverrides+=(".feeds = $2")
+			shift
+			;;
+		--feed-map)
+			configOverrides+=(".services.scuttlebotIdMap = $2")
 			shift
 			;;
 		--pairs)
