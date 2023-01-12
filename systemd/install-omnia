@@ -476,6 +476,10 @@ while [[ -n "$1" ]]; do
 			configOverrides+=(".pairs = $2")
 			shift
 			;;
+		--gofer-host)
+			goferConfigUpdates+=(".gofer.rpc.address = \"$2:8081\"")
+			shift
+			;;
 		--spire-bootstraps)
 			spireConfigOverrides+=(".transport.libp2p.bootstrapAddrs = $2")
 			leelooConfigOverrides+=(".transport.libp2p.bootstrapAddrs = $2")
