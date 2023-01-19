@@ -6,6 +6,7 @@
     "rpc": {
       "address": "127.0.0.1:8081"
     },
+    "rpcAgentAddr": "gofer.local:8081",
     "rpcListenAddr": "0.0.0.0:8081",
     "origins": {
       "balancerV2": {

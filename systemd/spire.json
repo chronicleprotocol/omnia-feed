@@ -40,8 +40,10 @@
   ],
   "spire": {
     "rpc": {
-      "address": "${CFG_SPIRE_RPC_ADDR-127.0.0.1:9100}"
+      "address": "127.0.0.1:9100"
     },
+    "rpcAgentAddr": "spire.local:9100",
+    "rpcListenAddr": "0.0.0.0:9100",
     "pairs": [
       "BTCUSD",
       "ETHBTC",
