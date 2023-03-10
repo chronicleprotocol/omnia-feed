@@ -10,7 +10,7 @@ Environment="SPIRE_LOG_FORMAT=$SPIRE_LOG_FORMAT"
 Environment="SPIRE_LOG_VERBOSITY=$SPIRE_LOG_VERBOSITY"
 User=$USER
 Group=$USER
-ExecStart=$SPIRE_PATH -c "$SPIRE_CONFIG" agent --log.format $SPIRE_LOG_FORMAT --log.verbosity $SPIRE_LOG_VERBOSITY
+ExecStart=$SPIRE_PATH -c $SPIRE_CONFIG agent --log.format $SPIRE_LOG_FORMAT --log.verbosity $SPIRE_LOG_VERBOSITY
 Restart=always
 RestartSec=5
 

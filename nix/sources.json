@@ -72,39 +72,39 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "omnia": {
-        "branch": "master",
+        "branch": "sc-1780",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "omnia",
-        "rev": "v1.14.0",
-        "sha256": "0hc01gf7nclws286fv1616n67sj974zv5d8pcpl95dffgl8xhkyd",
+        "rev": "9933b1c139bef4a9710f6641c0971a7a2a8f36a2",
+        "sha256": "1kg8pqc8b71cw2gkkwrvb2h157wapr0g7qnqwykfw72fw9wfvsjk",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/omnia/archive/v1.14.0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/omnia/archive/9933b1c139bef4a9710f6641c0971a7a2a8f36a2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "oracle-suite": {
-        "branch": "develop",
+        "branch": "v0.9.0",
         "description": null,
         "homepage": null,
         "owner": "chronicleprotocol",
         "repo": "oracle-suite",
-        "rev": "07b574554e03936f3338f98752d8cd055f067ae8",
-        "sha256": "0lhlg8wjhsvv212n3ppvvqmz59372kfx0dpzvn25axdvbb9wl1nj",
+        "rev": "afa937668f81e2b583294d24e116c2e448e5f988",
+        "sha256": "15k8knsqjalhzy9mdmmi8ppq776gqr05dh15b495vy3bbxzzrrbw",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/07b574554e03936f3338f98752d8cd055f067ae8.tar.gz",
+        "url": "https://github.com/chronicleprotocol/oracle-suite/archive/afa937668f81e2b583294d24e116c2e448e5f988.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
-        "branch": "master",
+        "branch": "v0.8.0",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "setzer",
-        "rev": "v0.7.0",
-        "sha256": "1qcm8xf3h79llxy8wlxmh5qxc8vygpjkhppgxv5aafjcmd2373b6",
+        "rev": "9e70a93e789dd540cd802dde47ad559c28460393",
+        "sha256": "0qjm261m6psyc5i28hlwz0nn1q3z7bvy79pp70xpn6fb112j8dq0",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/setzer/archive/v0.7.0.tar.gz",
+        "url": "https://github.com/chronicleprotocol/setzer/archive/9e70a93e789dd540cd802dde47ad559c28460393.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
