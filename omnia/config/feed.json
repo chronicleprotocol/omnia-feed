@@ -1,0 +1,23 @@
+{
+  "mode": "feed",
+  "ethereum": {
+    "from": "0xfadad77b3a7e5a84a1f7ded081e785585d4ffaf3",
+    "keystore": "/home/omnia/.ethereum/keystore",
+    "password": "/home/omnia/.ethereum/keystore/password"
+  },
+  "options": {
+    "interval": 60,
+    "msgLimit": 35,
+    "srcTimeout": 10,
+    "setzerTimeout": 10,
+    "setzerCacheExpiry": 120,
+    "setzerMinMedian": 3,
+    "setzerEthRpcUrl": "http://geth.local:8545"
+  },
+  "sources":["gofer","setzer"],
+  "transports":["spire","ssb-rpc"],
+  "pairs": {
+    "BTC/USD":{"msgExpiration":300,"msgSpread":0.5},
+    "ETH/USD":{"msgExpiration":300,"msgSpread":0.5}
+  }
+}

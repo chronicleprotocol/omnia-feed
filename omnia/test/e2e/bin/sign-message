@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ -n $OMNIA_DEBUG ]]; then
+	env | sort
+	set -x
+fi
+
+_path="/opt/omnia/lib"
+source "$_path/config.sh"
+source "$_path/log.sh"
+source "$_path/status.sh"
+source "$_path/util.sh"
+source "$_path/feed.sh"
+
+importEnv >/dev/null 2>&1 || exit 1
+OMNIA_VERBOSE=false
+OMNIA_DEBUG=0
+
+_msg=$(validateAndConstructMessage "$1" "$2" {})
+
+echo "$_msg"

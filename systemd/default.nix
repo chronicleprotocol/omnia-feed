@@ -14,14 +14,12 @@ stdenv.mkDerivation rec {
   in ''
     mkdir -p $out/{bin,share}
     cp -t $out/bin install-omnia
-    cp -t $out/share *.service *.json *.ini
+    cp -t $out/share *.service *.json *.ini ${omnia}/*.json
 
     wrapProgram "$out/bin/install-omnia" \
       --prefix PATH : "${path}" \
       --set SHARE_PATH "$out/share" \
       --set OMNIA_PATH "${omnia}/bin/omnia" \
-      --set OMNIA_LIB_PATH "${omnia}/lib" \
-      --set OMNIA_CONF_PATH "${omnia}/config" \
       --set GOFER_PATH "${oracle-suite}/bin/gofer" \
       --set SPIRE_PATH "${oracle-suite}/bin/spire" \
       --set SPLITTER_PATH "${oracle-suite}/bin/rpc-splitter" \
@@ -36,7 +34,7 @@ stdenv.mkDerivation rec {
   '';
 
   meta = {
-    description = "Installer script for Omnia service";
+    description = "Installer script for Omnia Feed service";
     homepage = "https://github.com/makerdao/oracles-v2";
     license = lib.licenses.gpl3;
     inherit version;

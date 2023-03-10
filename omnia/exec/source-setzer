@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -eo pipefail
+if [[ -n $OMNIA_DEBUG ]]; then set -x; fi
+
+cd "$(cd "${0%/*/*}" && pwd)/lib"
+. ./log.sh
+
+_mapSetzer() {
+	local _assetPair="$1"
+	local _source="$2"
+
+	[[ -z $_assetPair || -z $_source ]] \
+	&& error "bad _mapSetzer() request" "asset=$_assetPair" "source=$_source" \
+	&& return 1
+
+	# shellcheck disable=SC2155
+	local _price=$(setzer price "$_assetPair" "$_source")
+	if [[ -n "$_price" && "$_price" =~ ^([1-9][0-9]*([.][0-9]+)?|[0][.][0-9]*[1-9]+[0-9]*)$ ]]; then
+		jq -nc \
+			--arg s "$_assetPair@$_source" \
+			--arg p "$(LC_ALL=POSIX printf %0.10f "$_price")" \
+			'{($s):$p}'
+	else
+		error "failed to get asset price" "asset=$_assetPair" "source=$_source"
+	fi
+}
+
+readSourcesWithSetzer()  {
+	local _assetPair="$1"
+	local _setzerAssetPair="$1"
+	_setzerAssetPair="${_setzerAssetPair/\/}"
+	_setzerAssetPair="${_setzerAssetPair,,}"
+
+	local _prices
+	_prices="$(while IFS= read -r _src; do _mapSetzer "$_setzerAssetPair" "$_src"; done < <(setzer sources "$_setzerAssetPair"))"
+
+	# Check minimal available prices for setzer
+	local _length
+	_length="$(jq 'add|tonumber' <<<"$_prices" | jq -s 'length')"
+	if [[ $_length -lt $SETZER_MIN_MEDIAN ]]; then
+		error "Error: not enough sources to provide a median: ${#_prices[@]} < $SETZER_MIN_MEDIAN"
+		return 1
+	fi
+
+	local _median
+	case "$_setzerAssetPair" in
+		rethusd)
+			_median="$(setzer price "$_setzerAssetPair")"
+			;;
+		*)
+			_median="$(jq 'add|tonumber' <<<"$_prices" | jq -s 'sort | if length == 0 then null elif length % 2 == 0 then (.[length/2] + .[length/2-1])/2 else .[length/2|floor] end')"
+			;;
+	esac
+
+	local _output
+	_output="$(jq -cs \
+		--arg a "$_assetPair" \
+		--argjson m "$_median" '
+		{ asset: $a
+		, median: $m
+		, sources: .|add
+		}' <<<"$_prices")"
+
+	verbose --raw "setzer [price]" "$_output"
+	echo "$_output"
+}
+
+export ETH_RPC_URL="$SETZER_ETH_RPC_URL"
+
+readSourcesWithSetzer "$1"

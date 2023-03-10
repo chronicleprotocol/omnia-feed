@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -eo pipefail
+if [[ -n $OMNIA_DEBUG ]]; then set -x; fi
+
+cd "$(cd "${0%/*/*}" && pwd)/lib"
+source ./log.sh
+verbose --list "cast()" "$@"
+
+cast "$@" 2> >( STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "cast [stderr]" "$STDERR_DATA")

@@ -3,7 +3,12 @@ test-results/
 .env
 logs/
 
+.idea/
 .local/
 .vagrant/
+
+# E2E tests requirements
+vendor
+transport.log
 
 result*

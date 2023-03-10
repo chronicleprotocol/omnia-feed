@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ -n $OMNIA_DEBUG ]]; then
+	env | sort
+	set -x
+fi
+
+cd "$(cd "${0%/*/*}" && pwd)/lib"
+. ./config.sh
+. ./gasprice.sh
+. ./ethereum.sh
+. ./log.sh
+. ./status.sh
+. ./util.sh
+. ./transport.sh
+. ./feed.sh
+. ./omnia.sh
+
+initEnv
+[[ "$1" == "info" ]] && { echo "DONE"; exit 0; }
+
+if [[ "$OMNIA_MODE" == "FEED" ]]; then
+	runFeed
+else
+	error "Unrecognised OMNIA_MODE: $OMNIA_MODE"
+fi

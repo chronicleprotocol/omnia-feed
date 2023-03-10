@@ -7,9 +7,6 @@ SCRIPT_DIR="$(cd "${BASH_SOURCE[0]%/*}" && pwd)"
 TARGET_DIR="${TARGET_DIR:-/etc/systemd/system}"
 SHARE_DIR="${SHARE_PATH:-$SCRIPT_DIR}"
 
-OMNIA_LIB_PATH="${OMNIA_LIB_PATH:-$SCRIPT_DIR/../omnia/lib}"
-OMNIA_CONF_PATH="${OMNIA_CONF_PATH:-$SCRIPT_DIR/../omnia/config}"
-
 export OMNIA_PATH="${OMNIA_PATH:-$(command -v omnia)}"
 export OMNIA_CONFIG="${OMNIA_CONFIG:-/etc/omnia.conf}"
 
@@ -123,7 +120,7 @@ copyOmniaConf() {
 		fi
 	fi
 
-	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
+	sudo cp -v "$SHARE_DIR/$1" "$OMNIA_CONFIG" >&2
 	sudo chmod u+w "$OMNIA_CONFIG" >&2
 
 	configUpdates+=('.options.logFormat = "text"')

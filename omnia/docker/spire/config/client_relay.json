@@ -1,0 +1,7 @@
+{
+  "spire": {
+    "rpc": {
+      "address": "spire_relay.local:9102"
+    }
+  }
+}

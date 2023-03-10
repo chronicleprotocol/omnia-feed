@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+source ./log.sh
+
+case "$1" in
+	push|publish)
+		_val="$(cast --to-wei "$(jq -r '.price' <<<"$2")" eth)"
+		_msg="$(jq --arg val "$_val" -c '{
+			price: {
+				wat: .type,
+				val: $val,
+				age: .time,
+				r: .signature[0:64],
+				s: .signature[64:128],
+				v: .signature[128:130]
+			},
+			trace: .sources,
+			version: .version
+		}' <<<"$2")"
+		spire push -c "$SPIRE_CONFIG" price <<<"$_msg" -v info 2> >( STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "spire push -c $SPIRE_CONFIG price -v debug" $_msg "[stderr]>" "$STDERR_DATA") || exit $?
+		;;
+	pull)
+		_assetPair="$3"
+		_feedId="$2"
+		_msg="$(spire pull -c "$SPIRE_CONFIG" price "$_assetPair" "$_feedId" -v info 2> >( STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "spire pull -c $SPIRE_CONFIG price $_assetPair $_feedId -v debug" "[stderr]>" "$STDERR_DATA"))" || exit $?
+		_priceHex="$(cast --to-uint256 "$(jq -r '.price.val' <<<"$_msg")" | sed s/^0x//)"
+		_timeHex="$(cast --to-uint256 "$(jq -r '.price.age' <<<"$_msg")" | sed s/^0x//)"
+		jq -c --arg ph "$_priceHex" --arg th "$_timeHex" '{
+			type: .price.wat,
+			price: ((.price.val | tonumber) / 1e18),
+			priceHex: $ph,
+			time: .price.age,
+			timeHex: $th,
+			signature: (.price.r + .price.s + .price.v),
+			sources: .trace
+		}' <<<"$_msg"
+		;;
+	*) error "unknown command: $1";exit 1;;
+esac
