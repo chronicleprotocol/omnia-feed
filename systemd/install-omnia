@@ -6,8 +6,9 @@ set -eo pipefail
 SCRIPT_DIR="$(cd "${BASH_SOURCE[0]%/*}" && pwd)"
 TARGET_DIR="${TARGET_DIR:-/etc/systemd/system}"
 SHARE_DIR="${SHARE_PATH:-$SCRIPT_DIR}"
-OMNIA_LIB_PATH="${OMNIA_LIB_PATH:-$SCRIPT_DIR/../omnia/lib}"
-OMNIA_CONF_PATH="$SCRIPT_DIR/../share"
+
+export OMNIA_PATH="${OMNIA_PATH:-$(command -v omnia)}"
+export OMNIA_CONFIG="${OMNIA_CONFIG:-/etc/omnia.conf}"
 
 export SSB_PATH="${SSB_PATH:-$(command -v ssb-server)}"
 export SSB_CONF="${SSB_CONF:-$(dirname "$(command -v ssb-server)")/.ssb/config}"
@@ -22,20 +23,20 @@ export SPIRE_CONFIG="${SPIRE_CONFIG:-/etc/spire.conf}"
 export SPIRE_LOG_FORMAT="${SPIRE_LOG_FORMAT:-"text"}"
 export SPIRE_LOG_VERBOSITY="${SPIRE_LOG_VERBOSITY:-"error"}"
 
-export OMNIA_PATH="${OMNIA_PATH:-$(command -v omnia)}"
-export OMNIA_CONFIG="${OMNIA_CONFIG:-/etc/omnia.conf}"
-
 export SPLITTER_PATH="${SPLITTER_PATH:-$(command -v rpc-splitter)}"
 export SPLITTER_CONFIG="${SPLITTER_CONFIG:-/etc/splitter.conf}"
 export SPLITTER_URLS="${SPLITTER_URLS:-""}"
 export SPLITTER_LOG_FORMAT="${SPLITTER_LOG_FORMAT:-"text"}"
 export SPLITTER_LOG_VERBOSITY="${SPLITTER_LOG_VERBOSITY:-"error"}"
-SPLITTER_RPC_ADDR="127.0.0.1:9989"
+export SPLITTER_RPC_ADDR="${SPLITTER_RPC_ADDR:-"127.0.0.1:9989"}"
 
 export LEELOO_PATH=${LEELOO_PATH:-$(command -v leeloo)}
 export LEELOO_CONFIG=${LEELOO_CONFIG:-/etc/leeloo.conf}
 export LEELOO_LOG_FORMAT=${LEELOO_LOG_FORMAT:-"text"}
 export LEELOO_LOG_VERBOSITY=${LEELOO_LOG_VERBOSITY:-"error"}
+
+export TORPROXY_PATH=${TORPROXY_PATH:-$(command -v tor)}
+export TORPROXY_CONFIG=${TORPROXY_CONFIG:-/etc/torrc}
 
 usage() {
 	cat >&2 << EOF
@@ -86,14 +87,11 @@ subst() {
 $USER
 $SSB_PATH $SSB_CONF $SSB_CAPS $SSB_KEYS $SSB_PORT $SSB_HOST
 $OMNIA_PATH $OMNIA_CONFIG
-$GOFER_PATH $GOFER_CONFIG
-$GOFER_LOG_VERBOSITY $GOFER_LOG_FORMAT
-$SPIRE_PATH $SPIRE_CONFIG
-$SPIRE_LOG_VERBOSITY $SPIRE_LOG_FORMAT
-$LEELOO_PATH $LEELOO_CONFIG
-$LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
-$SPLITTER_PATH $SPLITTER_URLS
-$SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
+$GOFER_PATH $GOFER_CONFIG $GOFER_LOG_VERBOSITY $GOFER_LOG_FORMAT
+$SPIRE_PATH $SPIRE_CONFIG $SPIRE_LOG_VERBOSITY $SPIRE_LOG_FORMAT
+$LEELOO_PATH $LEELOO_CONFIG $LEELOO_LOG_VERBOSITY $LEELOO_LOG_FORMAT
+$SPLITTER_PATH $SPLITTER_URLS $SPLITTER_LOG_VERBOSITY $SPLITTER_LOG_FORMAT
+$TORPROXY_PATH $TORPROXY_CONFIG
 ' < "$2" | sudo tee "$target" >&2
 
 	echo >&2 "$name -> $target"
@@ -122,7 +120,7 @@ copyOmniaConf() {
 		fi
 	fi
 
-	sudo cp -v "$OMNIA_CONF_PATH/$1" "$OMNIA_CONFIG" >&2
+	sudo cp -v "$SHARE_DIR/$1" "$OMNIA_CONFIG" >&2
 	sudo chmod u+w "$OMNIA_CONFIG" >&2
 
 	configUpdates+=('.options.logFormat = "text"')
@@ -157,7 +155,7 @@ copySsbConf() {
 	if [[ -f $SSB_CONF ]]; then
 		updatedConf=$(jq . "$SSB_CONF")
 	fi
-	[[ -n $updatedConf ]] || updatedConf=$(jq . "$SHARE_DIR/ssb-config.json")
+	[[ -n $updatedConf ]] || updatedConf=$(jq . "${SHARE_DIR}/ssb-config.json")
 
 	for i in "${!ssbConfigUpdates[@]}"; do
 		updatedConf=$(jq -c "${ssbConfigUpdates[$i]}" <<< "$updatedConf")
@@ -192,15 +190,25 @@ copySpireConf() {
 		sudo mv -f "${SPIRE_CONFIG%.conf}.json" "$SPIRE_CONFIG"
 	fi
 
-	if [[ -f "$SPIRE_CONFIG" ]]; then
-		local _savedConfig
-		_savedConfig="$(jq '{ethereum} | del(.. | nulls)' "$SPIRE_CONFIG")"
-		if [[ -n "$_savedConfig" ]]; then
-			spireConfigOverrides+=(". * $_savedConfig")
+	if [[ -f "$OMNIA_CONFIG" ]]; then
+		local _omniaConfig
+		_omniaConfig="$(jq '.' -c "$OMNIA_CONFIG")"
+
+		spireConfigUpdates+=(".ethereum = $(jq '.ethereum' -c <<<"$_omniaConfig")")
+		spireConfigUpdates+=(".feeds = $(jq '.feeds | unique' -c <<<"$_omniaConfig")")
+		spireConfigUpdates+=(".spire.pairs = $(jq '.pairs | keys | unique[] | sub("/";"")' -c <<<"$_omniaConfig" | jq -s -c)")
+	fi
+
+	spireConfigOverrides+=(".transport.webapi.ethereumAddressBook.ethereum.rpc = \"http://${SPLITTER_RPC_ADDR}\"")
+	if [[ -f "${SPLITTER_CONFIG}" ]]; then
+		local _splitterConf
+		_splitterConf="$(jq '.ethereum.rpc // []' -c "${SPLITTER_CONFIG}")"
+		if [[ -n "$_splitterConf" ]]; then
+			spireConfigOverrides+=(".transport.webapi.ethereumAddressBook.ethereum.rpc = $_splitterConf")
 		fi
 	fi
 
-	sudo cp -v "$SHARE_DIR/spire.json" "$SPIRE_CONFIG" >&2
+	sudo cp -v "${SHARE_DIR}/spire.json" "$SPIRE_CONFIG" >&2
 	sudo chmod u+w "$SPIRE_CONFIG" >&2
 
 	for i in "${!spireConfigUpdates[@]}"; do
@@ -228,7 +236,7 @@ copyLeelooConf() {
 	if [[ -f "${LEELOO_CONFIG}" ]]
 	then
 		local _savedConfig
-		_savedConfig="$(jq -c '{ethereum,leeloo:{listeners:{teleportEVM:[{ethereum:{rpc:.leeloo.listeners.teleportEVM[0].ethereum.rpc}},{ethereum:{rpc:.leeloo.listeners.teleportEVM[1].ethereum.rpc}}]}}} | del(.. | nulls)' "${LEELOO_CONFIG}")"
+		_savedConfig="$(jq -c '{leeloo:{listeners:{teleportEVM:[{ethereum:{rpc:.leeloo.listeners.teleportEVM[0].ethereum.rpc}},{ethereum:{rpc:.leeloo.listeners.teleportEVM[1].ethereum.rpc}}]}}} | del(.. | nulls)' "${LEELOO_CONFIG}")"
 
 		local _optRPCs
 		_optRPCs="$(jq -c '.leeloo.listeners.teleportEVM[0].ethereum.rpc // []' <<<"${_savedConfig}")"
@@ -237,13 +245,18 @@ copyLeelooConf() {
 		local _arbRPCs
 		_arbRPCs="$(jq -c '.leeloo.listeners.teleportEVM[1].ethereum.rpc // []' <<<"${_savedConfig}")"
 		leelooConfigUpdates+=(".leeloo.listeners.teleportEVM[1].ethereum.rpc = ${_arbRPCs}")
-
-		local _eth
-		_eth="$(jq -c '.ethereum' <<<"${_savedConfig}")"
-		leelooConfigUpdates+=(".ethereum = ${_eth}")
 	fi
 
-	sudo cp -v "$SHARE_DIR/leeloo.json" "$LEELOO_CONFIG" >&2
+	if [[ -f "$OMNIA_CONFIG" ]]; then
+		local _omniaConfig
+		_omniaConfig="$(jq '.' -c "$OMNIA_CONFIG")"
+
+		leelooConfigUpdates+=(".feeds = $(jq '.feeds | unique' -c <<<"$_omniaConfig")")
+		leelooConfigUpdates+=(".ethereum = $(jq '.ethereum' -c <<<"$_omniaConfig")")
+	fi
+
+
+	sudo cp -v "${SHARE_DIR}/leeloo.json" "$LEELOO_CONFIG" >&2
 	sudo chmod u+w "$LEELOO_CONFIG" >&2
 
 	for i in "${!leelooConfigUpdates[@]}"; do
@@ -272,14 +285,21 @@ copyGoferConf() {
 		local _savedConfig
 		_savedConfig="$(jq '{ethereum,gofer:{origins:{openexchangerates:{params:{apiKey:.gofer.origins.openexchangerates.params.apiKey}}}}} | del(.. | nulls)' "$GOFER_CONFIG")"
 		if [[ -n "$_savedConfig" ]]; then
-			goferConfigUpdates=( ". * $_savedConfig" )
+			goferConfigUpdates+=( ". * $_savedConfig" )
 		fi
 	fi
 
-	sudo cp -v "$SHARE_DIR/gofer.json" "$GOFER_CONFIG" >&2
+	sudo cp -v "${SHARE_DIR}/gofer.json" "$GOFER_CONFIG" >&2
 	sudo chmod u+w "$GOFER_CONFIG" >&2
 
 	goferConfigOverrides+=(".ethereum.rpc = \"http://${SPLITTER_RPC_ADDR}\"")
+	if [[ -f "${SPLITTER_CONFIG}" ]]; then
+		local _splitterConf
+		_splitterConf="$(jq '.ethereum.rpc // []' -c "${SPLITTER_CONFIG}")"
+		if [[ -n "$_splitterConf" ]]; then
+			goferConfigOverrides+=(".ethereum.rpc = $_splitterConf")
+		fi
+	fi
 
 	for i in "${!goferConfigUpdates[@]}"; do
 		echo >&2 "  ${goferConfigUpdates[$i]}"
@@ -307,7 +327,7 @@ copySplitterConf() {
 		local _savedConfig
 		_savedConfig="$(jq '{ethereum} | del(.. | nulls)' "${SPLITTER_CONFIG}")"
 		if [[ -n "$_savedConfig" ]]; then
-			splitterConfigUpdates=( ". * $_savedConfig" )
+			splitterConfigUpdates+=( ". * $_savedConfig" )
 		fi
 	elif [[ -f /etc/systemd/system/splitter-agent.service ]]; then
 		local _savedConfig
@@ -315,11 +335,11 @@ copySplitterConf() {
 										| sed 's/--eth-rpc=//' \
 										| jq -R '.' | jq -sc)"
 		if [[ -n "$_savedConfig" ]]; then
-			splitterConfigUpdates=(". * {ethereum:{rpc:$_savedConfig}}")
+			splitterConfigUpdates+=(". * {ethereum:{rpc:$_savedConfig}}")
 		fi
 	fi
 
-	sudo cp -v "$SHARE_DIR/splitter.json" "${SPLITTER_CONFIG}" >&2
+	sudo cp -v "${SHARE_DIR}/splitter.json" "${SPLITTER_CONFIG}" >&2
 	sudo chmod u+w "${SPLITTER_CONFIG}" >&2
 
 	splitterConfigOverrides+=(".splitter.rpc.address = \"${SPLITTER_RPC_ADDR}\"")
@@ -343,30 +363,47 @@ copySplitterConf() {
 	echo >&2 "SPLITTER_CONFIG: DONE"
 }
 
+copyTorConfig() {
+	echo >&2 "TORPROXY_CONFIG: START"
+
+	sudo cp -v "${SHARE_DIR}/torproxy.ini" "${TORPROXY_CONFIG}" >&2
+	sudo chmod u+w "${TORPROXY_CONFIG}" >&2
+
+	# shellcheck disable=SC2174
+	mkdir -m 0700 -p "$HOME"/.tor/{run,data} > /dev/null
+
+	sudo tee -a "${TORPROXY_CONFIG}" <<< "ControlSocket ${HOME}/.tor/run/control"
+	sudo tee -a "${TORPROXY_CONFIG}" <<< "CookieAuthFile ${HOME}/.tor/run/control.authcookie"
+	sudo tee -a "${TORPROXY_CONFIG}" <<< "DataDirectory ${HOME}/.tor/data"
+
+	echo >&2 "TORPROXY_CONFIG: DONE"
+}
+
 installConfigs() {
-	copyOmniaConf "$installType.conf"
+	copyOmniaConf "feed-ethereum-mainnet.json"
 	copySsbConf
+	copySpireConf
+	copyTorConfig
 	copySplitterConf
 	copyGoferConf
 	copyLeelooConf
-	copySpireConf
 }
 
 installServices() {
-	subst spire-agent "$SHARE_DIR"/spire-agent.service
-	subst leeloo-agent "$SHARE_DIR"/leeloo-agent.service
-	subst gofer-agent "$SHARE_DIR"/gofer-agent.service
-	subst splitter-agent "$SHARE_DIR"/splitter-agent.service
-	subst ssb-server "$SHARE_DIR"/ssb-server.service
-	subst omnia "$SHARE_DIR"/omnia.service
+	echo "INSTALL SERVICES: START"
+	subst leeloo-agent "${SHARE_DIR}"/leeloo-agent.service
+	subst gofer-agent "${SHARE_DIR}"/gofer-agent.service
+	subst splitter-agent "${SHARE_DIR}"/splitter-agent.service
+	subst spire-agent "${SHARE_DIR}"/spire-agent.service
+	subst ssb-server "${SHARE_DIR}"/ssb-server.service
+	subst torproxy "${SHARE_DIR}"/torproxy.service
+	subst omnia "${SHARE_DIR}"/omnia.service
+	echo "INSTALL SERVICES: DONE"
 }
 
 case "$1" in
 	feed)
-		installType="feed"
-		;;
-	relay)
-		installType="relay"
+		echo >&2 "Starting feed"
 		;;
 	help | --help | -h)
 		usage
@@ -421,6 +458,9 @@ while [[ -n "$1" ]]; do
 			configUpdates+=(".options.ethGas = ${_gas}")
 			shift
 			;;
+		--no-eth-rpc)
+			splitterConfigOverrides+=(".ethereum.rpc = []")
+			;;
 		--eth-rpc)
 			splitterConfigOverrides+=(".ethereum.rpc += [\"$2\"]")
 			shift
@@ -435,27 +475,33 @@ while [[ -n "$1" ]]; do
 			;;
 		--from)
 			configOverrides+=(".ethereum.from = \"$2\"")
-			spireConfigOverrides+=(".ethereum.from = \"$2\"")
-			spireConfigUpdates+=(".feeds += [\"$2\"]")
-			leelooConfigOverrides+=(".ethereum.from = \"$2\"")
-			leelooConfigUpdates+=(".feeds += [\"$2\"]")
 			shift
 			;;
 		--keystore)
 			configOverrides+=(".ethereum.keystore = \"$2\"")
-			spireConfigOverrides+=(".ethereum.keystore = \"$2\"")
-			leelooConfigOverrides+=(".ethereum.keystore = \"$2\"")
 			shift
 			;;
 		--password)
 			configOverrides+=(".ethereum.password = \"$2\"")
-			spireConfigOverrides+=(".ethereum.password = \"$2\"")
-			leelooConfigOverrides+=(".ethereum.password = \"$2\"")
 			shift
 			;;
 		--teleport)
 			if [[ -n "$2" ]]; then
 				leelooConfigOverrides+=(".leeloo.listeners = $2")
+			fi
+			shift
+			;;
+		--staticOnionBook)
+			if [[ -n "$2" ]]; then
+				spireConfigOverrides+=(".transport.webapi.addressBookType = \"static\"")
+				spireConfigOverrides+=(".transport.webapi.staticAddressBook.remoteAddrs = $2")
+			fi
+			shift
+			;;
+		--ethOnionBook)
+			if [[ -n "$2" ]]; then
+				spireConfigOverrides+=(".transport.webapi.addressBookType = \"ethereum\"")
+				spireConfigOverrides+=(".transport.webapi.ethereumAddressBook.addressBookAddr = \"$2\"")
 			fi
 			shift
 			;;
@@ -469,10 +515,6 @@ while [[ -n "$1" ]]; do
 			configOverrides+=(".feeds = $2")
 			spireConfigOverrides+=(".feeds = $2")
 			leelooConfigOverrides+=(".feeds = $2")
-			shift
-			;;
-		--feed-map)
-			configOverrides+=(".services.scuttlebotIdMap = $2")
 			shift
 			;;
 		--pairs)
@@ -490,10 +532,6 @@ while [[ -n "$1" ]]; do
 			;;
 		--spire-seed)
 			spireConfigOverrides+=(".transport.libp2p.privKeySeed = \"$2\"")
-			shift
-			;;
-		--spire-pairs)
-			spireConfigOverrides+=(".spire.pairs = $2")
 			shift
 			;;
 		--network)
@@ -575,6 +613,8 @@ done
 
 installConfigs
 installServices
+
+"$OMNIA_PATH" info
 
 echo >&2 "To (re)start Omnia now (and auto-start on reboot) run:"
 echo "systemctl daemon-reload # Reload systemd services"

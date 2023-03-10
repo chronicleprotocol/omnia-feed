@@ -48,11 +48,16 @@
           }
         }
       },
+      "ishares": {
+        "type": "ishares",
+        "name": "ishares",
+        "params": {}
+      },
       "openexchangerates": {
         "type": "openexchangerates",
         "name": "openexchangerates",
         "params": {
-          "apiKey": "API_KEY"
+          "apiKey": "${GOFER_OPENEXCHANGERATES_API_KEY-}"
         }
       },
       "poloniex": {
@@ -187,6 +192,15 @@
           "minimumSuccessfulSources": 2
         }
       },
+      "IBTA/USD": {
+        "method": "median",
+        "sources": [
+          [{ "origin": "ishares", "pair": "IBTA/USD" }]
+        ],
+        "params": {
+          "minimumSuccessfulSources": 1
+        }
+      },
       "LINK/USD": {
         "method": "median",
         "sources": [
@@ -226,6 +240,32 @@
         ],
         "params": {
           "minimumSuccessfulSources": 3
+        }
+      },
+      "MKR/ETH": {
+        "method": "median",
+        "sources": [
+          [{ "origin": "binance", "pair": "MKR/BTC" },{ "origin": ".", "pair": "ETH/BTC" }],
+          [{ "origin": "bitstamp", "pair": "MKR/USD" },{ "origin": ".", "pair": "ETH/USD" }],
+          [{ "origin": "coinbasepro", "pair": "MKR/USD" },{ "origin": ".", "pair": "ETH/USD" }],
+          [{ "origin": "gemini", "pair": "MKR/USD" },{ "origin": ".", "pair": "ETH/USD" }],
+          [{ "origin": "kraken", "pair": "MKR/USD" },{ "origin": ".", "pair": "ETH/USD" }]
+        ],
+        "params": {
+          "minimumSuccessfulSources": 4
+        }
+      },
+      "MKR/USD": {
+        "method": "median",
+        "sources": [
+          [{ "origin": "binance", "pair": "MKR/BTC" },{ "origin": ".", "pair": "BTC/USD" }],
+          [{ "origin": "bitstamp", "pair": "MKR/USD" }],
+          [{ "origin": "coinbasepro", "pair": "MKR/USD" }],
+          [{ "origin": "gemini", "pair": "MKR/USD" }],
+          [{ "origin": "kraken", "pair": "MKR/USD" }]
+        ],
+        "params": {
+          "minimumSuccessfulSources": 4
         }
       },
       "RETH/ETH": {

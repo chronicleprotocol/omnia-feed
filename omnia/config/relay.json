@@ -1,0 +1,34 @@
+{
+  "mode": "relay",
+  "ethereum": {
+    "type": "ethereum",
+    "from": "0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6",
+    "keystore": "/home/omnia/.ethereum/keystore",
+    "password": "/home/omnia/.ethereum/keystore/password",
+    "network": "http://geth.local:8545"
+  },
+  "feeds": [
+    "0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6",
+    "0xfadad77b3a7e5a84a1f7ded081e785585d4ffaf3"
+  ],
+  "options": {
+    "interval": 60,
+    "msgLimit": 20,
+    "ethGas": 200000
+  },
+  "transports":["spire","ssb-rpc"],
+  "pairs": {
+    "BTCUSD": {
+      "oracle": "0x9b637fDF5482340C823930366464c146f318b896",
+      "oracleSpread": 0.5,
+      "oracleExpiration": 15500,
+      "msgExpiration": 1800
+    },
+    "ETHUSD": {
+      "oracle": "0x659D4343c656bEafb2441C50a0fb3d513374fe66",
+      "oracleSpread": 0.5,
+      "oracleExpiration": 15500,
+      "msgExpiration": 1800
+    }
+  }
+}

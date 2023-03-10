@@ -31,12 +31,11 @@ in rec {
 
   oracle-suite = pkgs.callPackage sources.oracle-suite { buildGoModule = nixpkgs2.buildGo118Module; };
   setzer = pkgs.callPackage sources.setzer { };
-  ethsign = pkgs.callPackage (import "${sources.omnia}/ethsign") { };
+  ethsign = pkgs.callPackage (import ../ethsign) { };
   foundry = pkgs.callPackage (import ../foundry) { inherit (nixpkgs2) pkgs; };
 
-  omnia = pkgs.callPackage sources.omnia {
+  omnia = pkgs.callPackage (import ../omnia) {
     inherit ssb-server oracle-suite setzer ethsign foundry;
-    oracleVersion = pkgs.lib.fileContents ../version;
   };
 
   install-omnia = pkgs.callPackage ../systemd { inherit omnia ssb-server oracle-suite; };

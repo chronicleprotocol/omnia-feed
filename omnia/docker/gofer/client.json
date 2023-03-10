@@ -1,0 +1,10 @@
+{
+  "ethereum": {
+    "rpc": "http://geth.local:8545"
+  },
+  "gofer": {
+    "rpc": { 
+      "address":"gofer.local:9200"
+    }
+  }
+}

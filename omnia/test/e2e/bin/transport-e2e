@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -eo pipefail
+if [[ -n $OMNIA_DEBUG ]]; then set -x; fi
+
+# Binding new transport file for e2e transport or creating new one if it doesn't exist.
+OMNIA_TRANSPORT_E2E_FILE=${OMNIA_TRANSPORT_E2E_FILE:-$(mktemp)}
+
+_command="$1"
+case "$_command" in
+	push|publish)
+		_price=$(jq -r '.price' <<<"$2")
+		# This is additional hack to allow sending negative prices.
+		# Without it `cast` will fail and you wouldn't be able to deliver invalid price to omnia
+		if [ $_price -lt 0 ]
+		then
+			_price=$(echo "$_price * -1" | bc)
+			_val="-$(cast --to-wei "$_price" eth)"
+		else
+			_val=$(cast --to-wei "$_price" eth)
+		fi
+		_msg=$(jq --arg val "$_val" -c '{
+			price: {
+				wat: .type,
+				val: $val,
+				age: .time,
+				r: .signature[0:64],
+				s: .signature[64:128],
+				v: .signature[128:130]
+			},
+			trace: .sources
+		}' <<<"$2")
+
+		echo $_msg >> "$OMNIA_TRANSPORT_E2E_FILE"
+		;;
+	pull)
+		_assetPair="$3"
+		_feedId="$2"
+		_msg=$(tail -n 1 "$OMNIA_TRANSPORT_E2E_FILE") || exit $?
+		_priceHex=$(cast --to-uint256 "$(jq -r '.price.val' <<<"$_msg")" | sed s/^0x//)
+		_timeHex=$(cast --to-uint256 "$(jq -r '.price.age' <<<"$_msg")" | sed s/^0x//)
+
+		jq -c --arg ph "$_priceHex" --arg th "$_timeHex" '{
+			type: .price.wat,
+			price: ((.price.val | tonumber) / 1e18),
+			priceHex: $ph,
+			time: .price.age,
+			timeHex: $th,
+			signature: (.price.r + .price.s + .price.v),
+			sources: .trace
+		}' <<<"$_msg"
+		;;
+esac

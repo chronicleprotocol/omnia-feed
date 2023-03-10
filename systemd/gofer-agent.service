@@ -10,7 +10,7 @@ Environment="GOFER_LOG_FORMAT=$GOFER_LOG_FORMAT"
 Environment="GOFER_LOG_VERBOSITY=$GOFER_LOG_VERBOSITY"
 User=$USER
 Group=$USER
-ExecStart=$GOFER_PATH -c "$GOFER_CONFIG" agent --log.format $GOFER_LOG_FORMAT --log.verbosity $GOFER_LOG_VERBOSITY
+ExecStart=$GOFER_PATH -c $GOFER_CONFIG agent --log.format $GOFER_LOG_FORMAT --log.verbosity $GOFER_LOG_VERBOSITY
 Restart=always
 RestartSec=5
 

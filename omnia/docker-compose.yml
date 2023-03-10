@@ -1,0 +1,169 @@
+version: '3'
+services:
+  geth:
+    container_name: geth.local
+    build:
+      context: "."
+      dockerfile: "docker/geth/Dockerfile"
+    ports:
+      - "8545:8545"
+      - "30303:30303"
+    volumes:
+      # - "./docker/geth/data:/home/geth/data"
+      - "./docker/geth/config:/home/geth/config"
+      - "./docker/keystore:/home/geth/keystore"
+    command:
+      - "--datadir=/home/geth/data"
+      - "--keystore=/home/geth/keystore"
+      - "--password=/home/geth/keystore/password"
+      - "--allow-insecure-unlock"
+      - "--unlock=0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6,0xfadad77b3a7e5a84a1f7ded081e785585d4ffaf3,0x3980aa37f838bec2e457445d943feb3af98ff036"
+      - "--networkid=99"
+      - "--lightkdf"
+      - "--nodiscover"
+      - "--maxpeers=0"
+      - "--port=0"
+      - "--nousb"
+      - "--ipcdisable"
+      - "--mine"
+      - "--miner.threads=1"
+      - "--miner.etherbase=0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6"
+      - "--http"
+      - "--http.addr=0.0.0.0"
+      - "--http.port=8545"
+      - "--http.api=admin,personal,eth,miner,debug,txpool,net,web3"
+      - "--http.corsdomain=*"
+      - "--http.vhosts=*"
+      - "--rpc.allow-unprotected-txs"
+
+  # deployer:
+  #   build:
+  #     context: "."
+  #     dockerfile: "docker/deployer/Dockerfile"
+  #   volumes:
+  #     - "./docker/geth/bin/:/root/bin"
+  #   command: ["median-deploy", "BATUSD", "BTCUSD", "ETHUSD", "KNCUSD", "MANAUSD", "0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6", "0x3980aa37f838bec2e457445d943feb3af98ff036"]
+
+  ssb_server_feed:
+    container_name: ssb-feed.local
+    image: ghcr.io/chronicleprotocol/ssb_server:${DOCKER_SSB_IMAGE_VERSION:-latest}
+    ports:
+      - "8001:8000"
+    volumes:
+      - "./docker/ssb-server/config/feed_config.json:/root/.ssb/config"
+      - "./docker/ssb-server/config/feed_secret:/root/.ssb/secret"
+
+  ssb_server_relay:
+    container_name: ssb-relay.local
+    image: ghcr.io/chronicleprotocol/ssb_server:${DOCKER_SSB_IMAGE_VERSION:-latest}
+    ports:
+      - "8002:8000"
+    volumes:
+      - "./docker/ssb-server/config/relay_config.json:/root/.ssb/config"
+      - "./docker/ssb-server/config/relay_secret:/root/.ssb/secret"
+
+  gofer:
+    container_name: gofer.local
+    image: ghcr.io/chronicleprotocol/gofer:${DOCKER_IMAGE_VERSION:-latest}
+    ports:
+      - "9200:9200"
+    entrypoint: [ "/usr/local/bin/gofer" ]
+    command: [ "-c", "/etc/gofer.json","-v", "debug", "agent" ]
+    volumes:
+      - "./docker/gofer/agent.json:/etc/gofer.json"
+
+  spire_feed:
+    image: ghcr.io/chronicleprotocol/spire:${DOCKER_IMAGE_VERSION:-latest}
+    container_name: spire_feed.local
+    ports:
+      - "8101:8101"
+      - "9101:9101"
+    entrypoint: [ "/usr/local/bin/spire" ]
+    command: [ "-c", "/etc/spire.json", "agent", "-v", "info" ]
+    volumes:
+      - "./docker/keystore:/root/keystore"
+      - "./docker/spire/config/agent_feed.json:/etc/spire.json"
+
+  spire_relay:
+    image: ghcr.io/chronicleprotocol/spire:${DOCKER_IMAGE_VERSION:-latest}
+    container_name: spire_relay.local
+    depends_on:
+      - spire_feed
+    ports:
+      - "8102:8102"
+      - "9102:9102"
+    entrypoint: [ "/usr/local/bin/spire" ]
+    command: [ "-c", "/etc/spire.json", "agent", "-v", "info" ]
+    volumes:
+      - "./docker/keystore:/root/keystore"
+      - "./docker/spire/config/agent_relay.json:/etc/spire.json"
+
+  omnia_feed:
+    depends_on:
+      - gofer
+      - spire_feed
+      - ssb_server_feed
+    image: ghcr.io/chronicleprotocol/omnia:${DOCKER_IMAGE_VERSION:-latest}
+    build:
+      context: "."
+      args:
+        ORACLE_SUITE_BRANCH: "sc-488/omnia-cannot-communicate-with-transports"
+    volumes:
+      - "./bin:/opt/omnia/bin"
+      - "./lib:/opt/omnia/lib"
+      - "./exec:/opt/omnia/exec"
+      - "./test:/opt/omnia/test"
+
+      - "./config/feed.json:/home/omnia/omnia.json"
+      - "./docker/spire/config/client_feed.json:/home/omnia/spire.json"
+      - "./docker/gofer/client.json:/home/omnia/gofer.json"
+
+      - "./docker/keystore/:/home/omnia/.ethereum/keystore/"
+      - "./docker/ssb-server/config/feed_config.json:/home/omnia/.ssb/config"
+      - "./docker/ssb-server/config/feed_secret:/home/omnia/.ssb/secret"
+
+    environment:
+      SSB_KEYS: "/home/omnia/.ssb/secret"
+      SSB_CONF: "/home/omnia/.ssb/config"
+      SSB_HOST: "ssb-feed.local"
+      SSB_PORT: "8000"
+      OMNIA_VERBOSE: "true"
+#      OMNIA_LOG_FORMAT: "json"
+
+  omnia_relay:
+    depends_on:
+      - geth
+      - spire_relay
+      - ssb_server_relay
+    image: ghcr.io/chronicleprotocol/omnia:${DOCKER_IMAGE_VERSION:-latest}
+    build:
+      context: "."
+    volumes:
+      - "./bin:/opt/omnia/bin"
+      - "./lib:/opt/omnia/lib"
+      - "./exec:/opt/omnia/exec"
+      - "./test:/opt/omnia/test"
+
+      - "../dapptools/src/seth/:/opt/seth/"
+
+      - "./config/relay.json:/home/omnia/omnia.json"
+      - "./docker/spire/config/client_relay.json:/home/omnia/spire.json"
+
+      - "./docker/keystore/:/home/omnia/.ethereum/keystore/"
+      - "./docker/ssb-server/config/relay_config.json:/home/omnia/.ssb/config"
+      - "./docker/ssb-server/config/relay_secret:/home/omnia/.ssb/secret"
+    environment:
+      ETH_RPC_URL: "http://geth.local:8545"
+      ETH_FROM: "0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6"
+      ETH_GAS_SOURCE: "node"
+      ETH_MAXPRICE_MULTIPLIER: 1
+
+      SSB_KEYS: "/home/omnia/.ssb/secret"
+      SSB_CONF: "/home/omnia/.ssb/config"
+      SSB_HOST: "ssb-relay.local"
+      SSB_PORT: "8000"
+      OMNIA_VERBOSE: "true"
+#      OMNIA_LOG_FORMAT: "json"
+networks:
+  default:
+    name: omnia_network

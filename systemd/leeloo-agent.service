@@ -10,7 +10,7 @@ Environment="LEELOO_LOG_FORMAT=$LEELOO_LOG_FORMAT"
 Environment="LEELOO_LOG_VERBOSITY=$LEELOO_LOG_VERBOSITY"
 User=$USER
 Group=$USER
-ExecStart=$LEELOO_PATH -c "$LEELOO_CONFIG" agent --log.format $LEELOO_LOG_FORMAT --log.verbosity $LEELOO_LOG_VERBOSITY
+ExecStart=$LEELOO_PATH -c $LEELOO_CONFIG agent --log.format $LEELOO_LOG_FORMAT --log.verbosity $LEELOO_LOG_VERBOSITY
 Restart=always
 RestartSec=5
 

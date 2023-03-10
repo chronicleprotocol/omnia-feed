@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+cd "$(cd "${0%/*/*}" && pwd)/lib"
+source ./log.sh
+source ./config.sh
+source ./util.sh
+source ./status.sh
+
+isntStale() {
+	local _latestMsg="$1"
+	local _msg="$2"
+	local _median
+	_median=$(jq -r .price <<<"$_msg")
+	local _assetPair
+	_assetPair=$(jq -r .type <<<"$_msg")
+
+	[[ "$(isEmpty "$_latestMsg")" == "false" \
+	&& "$(isAssetPair "$_assetPair" "$_latestMsg")" == "true" \
+	&& "$(isMsgExpired "$_assetPair" "$_latestMsg")" == "false" \
+	&& "$(isMsgStale "$_assetPair" "$_latestMsg" "$_median")" == "false" \
+	]]
+}
+
+getMyId() {
+	ssb-server whoami 2> >(STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "ssb-server whoami [stderr]" "$STDERR_DATA") | jq -r '.id'
+}
+
+pullLatestFeedMsgOfType() {
+	local _feedId;_feedId=$(getId "$1")
+	local _assetPair="$2"
+	_assetPair=${_assetPair/\/}
+	_assetPair=${_assetPair^^}
+	local _msg;
+	if _msg=$(ssb-server createUserStream --id "$_feedId" --limit "$OMNIA_MSG_LIMIT" --reverse --fillCache 1 2> >(STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "ssb-server createUserStream [stderr]" "$STDERR_DATA"))
+	then
+		jq -scM --arg pair "$_assetPair" '
+			[.[] | select(.value.content.type == $pair)]
+			| max_by(.value.content.time)
+			| {
+				author: .value.author,
+				version: .value.content.version,
+				time: .value.content.time,
+				timeHex: .value.content.timeHex,
+				msgID: .key,
+				previous: .value.previous,
+				type: .value.content.type,
+				price: .value.content.price,
+				priceHex: .value.content.priceHex,
+				signature: .value.content.signature
+			}' <<<"$_msg"
+	else
+		error "Message receiving failed" "transport=ssb" "feed=$_feedId" "asset=$_assetPair"
+		exit 1
+	fi
+}
+
+publishMsg() {
+	local _msg="$1"
+	local _feedId;_feedId=$(getMyId)
+	local _assetPair;_assetPair=$(jq -r .type <<<"$_msg")
+	if isntStale "$(pullLatestFeedMsgOfType "$_feedId" "$_assetPair")" "$_msg"
+	then
+		verbose "SKIPPING - last message is NOT stale." "transport=ssb" "feed=$_feedId" "asset=$_assetPair"
+	else
+		ssb-server publish . <<<"$_msg" 2> >( STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "ssb-server publish [stderr]" "$STDERR_DATA") | jq -c .
+	fi
+}
+
+_json=$(jq -e . "$OMNIA_CONFIG")
+{
+	importMode "$_json"
+	importOptionsEnv "$_json"
+	importAssetPairsEnv "$_json"
+} >&2
+
+case "$1" in
+	push|publish) publishMsg "$2";;
+	pull) pullLatestFeedMsgOfType "$2" "$3";;
+	*) error "unknown command: $1";exit 1;;
+esac

@@ -1,0 +1,64 @@
+{
+  "ethereum": {
+    "rpc": "http://geth.local:8545"
+  },
+  "gofer": {
+    "rpc": {
+      "disabled": false,
+      "address": ":9000"
+    },
+    "origins": {
+      "binance_us": {
+        "type": "binance",
+        "name": "binance_us",
+        "url": "https://www.binance.us",
+        "params": {}
+      },
+      "uniswapV3": {
+        "type": "uniswapV3",
+        "name": "uniswapV3",
+        "params": {
+          "symbolAliases": {
+            "ETH": "WETH",
+            "BTC": "WBTC",
+            "USD": "USDC"
+          },
+          "contracts": {
+            "USDC/WETH": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+          }
+        }
+      }
+    },
+    "priceModels": {
+      "BTC/USD": {
+        "method": "median",
+        "sources": [
+          [{ "origin": "binance_us", "pair": "BTC/USD" }],
+          [{ "origin": "bitstamp", "pair": "BTC/USD" }],
+          [{ "origin": "coinbasepro", "pair": "BTC/USD" }],
+          [{ "origin": "ftx", "pair": "BTC/USD" }],
+          [{ "origin": "gemini", "pair": "BTC/USD" }],
+          [{ "origin": "kraken", "pair": "BTC/USD" }]
+        ],
+        "params": {
+          "minimumSuccessfulSources": 3
+        }
+      },
+      "ETH/USD": {
+        "method": "median",
+        "sources": [
+          [{ "origin": "binance", "pair": "ETH/BTC" },{ "origin": ".", "pair": "BTC/USD" }],
+          [{ "origin": "bitstamp", "pair": "ETH/USD" }],
+          [{ "origin": "coinbasepro", "pair": "ETH/USD" }],
+          [{ "origin": "ftx", "pair": "ETH/USD" }],
+          [{ "origin": "gemini", "pair": "ETH/USD" }],
+          [{ "origin": "kraken", "pair": "ETH/USD" }],
+          [{ "origin": "uniswapV3", "pair": "ETH/USD" }]
+        ],
+        "params": {
+          "minimumSuccessfulSources": 4
+        }
+      }
+    }
+  }
+}

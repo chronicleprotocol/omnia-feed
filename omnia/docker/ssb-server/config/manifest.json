@@ -1,0 +1,112 @@
+{
+  "auth": "async",
+  "address": "sync",
+  "manifest": "sync",
+  "multiserver": {
+    "parse": "sync",
+    "address": "sync"
+  },
+  "multiserverNet": {},
+  "get": "async",
+  "createFeedStream": "source",
+  "createLogStream": "source",
+  "messagesByType": "source",
+  "createHistoryStream": "source",
+  "createUserStream": "source",
+  "createWriteStream": "sink",
+  "links": "source",
+  "add": "async",
+  "publish": "async",
+  "getAddress": "sync",
+  "getLatest": "async",
+  "latest": "source",
+  "latestSequence": "async",
+  "whoami": "sync",
+  "progress": "sync",
+  "status": "sync",
+  "getVectorClock": "async",
+  "version": "sync",
+  "help": "sync",
+  "seq": "async",
+  "usage": "sync",
+  "clock": "async",
+  "plugins": {
+    "install": "source",
+    "uninstall": "source",
+    "enable": "async",
+    "disable": "async",
+    "help": "sync"
+  },
+  "gossip": {
+    "add": "sync",
+    "remove": "sync",
+    "connect": "async",
+    "disconnect": "async",
+    "changes": "source",
+    "reconnect": "sync",
+    "disable": "sync",
+    "enable": "sync",
+    "ping": "duplex",
+    "get": "sync",
+    "peers": "sync",
+    "help": "sync"
+  },
+  "replicate": {
+    "changes": "source",
+    "upto": "source",
+    "request": "sync",
+    "block": "sync"
+  },
+  "friends": {
+    "hopStream": "source",
+    "onEdge": "sync",
+    "isFollowing": "async",
+    "isBlocking": "async",
+    "hops": "async",
+    "help": "sync",
+    "get": "async",
+    "createFriendStream": "source",
+    "stream": "source"
+  },
+  "blobs": {
+    "get": "source",
+    "getSlice": "source",
+    "add": "sink",
+    "rm": "async",
+    "ls": "source",
+    "has": "async",
+    "size": "async",
+    "meta": "async",
+    "want": "async",
+    "push": "async",
+    "changes": "source",
+    "createWants": "source",
+    "help": "sync"
+  },
+  "invite": {
+    "create": "async",
+    "use": "async",
+    "accept": "async"
+  },
+  "query": {
+    "read": "source",
+    "explain": "sync",
+    "help": "sync"
+  },
+  "links2": {
+    "read": "source",
+    "help": "sync"
+  },
+  "ws": {},
+  "ebt": {
+    "replicate": "duplex",
+    "request": "sync",
+    "block": "sync",
+    "peerStatus": "sync"
+  },
+  "ooo": {
+    "stream": "duplex",
+    "get": "async",
+    "help": "sync"
+  }
+}

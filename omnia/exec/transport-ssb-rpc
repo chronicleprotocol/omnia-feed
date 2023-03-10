@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+cd "$(cd "${0%/*/*}" && pwd)/lib"
+source ./log.sh
+source ./config.sh
+source ./util.sh
+source ./status.sh
+
+isntStale() {
+	local _latestMsg="$1"
+	local _msg="$2"
+	local _median
+	_median=$(jq -r .price <<<"$_msg")
+	local _assetPair
+	_assetPair=$(jq -r .type <<<"$_msg")
+
+	[[ "$(isEmpty "$_latestMsg")" == "false" \
+	&& "$(isAssetPair "$_assetPair" "$_latestMsg")" == "true" \
+	&& "$(isMsgExpired "$_assetPair" "$_latestMsg")" == "false" \
+	&& "$(isMsgStale "$_assetPair" "$_latestMsg" "$_median")" == "false" \
+	]]
+}
+
+getMyId() {
+	ssb-rpc-client \
+		--keys "$SSB_KEYS" --caps "$SSB_CONF" \
+		--host "$SSB_HOST" --port "$SSB_PORT" \
+		whoami 2> >( STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "ssb-rpc [stderr]" "host=$SSB_HOST" "port=$SSB_PORT" "$STDERR_DATA") \
+		| jq -r '.id'
+}
+
+pullLatestFeedMsgOfType() {
+	local _feedId;_feedId=$(getId "$1")
+	local _assetPair="$2"
+	_assetPair=${_assetPair/\/}
+	_assetPair=${_assetPair^^}
+	local _msg;
+	if _msg=$(ssb-rpc-client \
+		--keys "$SSB_KEYS" --caps "$SSB_CONF" \
+		--host "$SSB_HOST" --port "$SSB_PORT" \
+		pull --id "$_feedId" --type "$_assetPair" --limit "$OMNIA_MSG_LIMIT" \
+		2> >( STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] ||verbose --raw "ssb-rpc [stderr]" "host=$SSB_HOST" "port=$SSB_PORT" "$STDERR_DATA"))
+	then
+		jq -cM '
+			{
+				author: .value.author,
+				version: .value.content.version,
+				time: .value.content.time,
+				timeHex: .value.content.timeHex,
+				msgID: .key,
+				previous: .value.previous,
+				type: .value.content.type,
+				price: .value.content.price,
+				priceHex: .value.content.priceHex,
+				signature: .value.content.signature
+			}' <<<"$_msg"
+	else
+		error "Message receiving failed" "transport=ssb-rpc" "feed=$_feedId" "asset=$_assetPair"
+		exit 1
+	fi
+}
+
+publishMsg() {
+	local _msg="$1"
+	local _feedId;_feedId=$(getMyId)
+	local _assetPair;_assetPair=$(jq -r .type <<<"$_msg")
+	# TODO: move rate limiting (isntStale) to the RPC client - just like spire - for consistency
+	if isntStale "$(pullLatestFeedMsgOfType "$_feedId" "$_assetPair")" "$_msg"
+	then
+		verbose "SKIPPING - last message is NOT stale." "transport=ssb-rpc" "feed=$_feedId" "asset=$_assetPair"
+	else
+		ssb-rpc-client \
+			--keys "$SSB_KEYS" --caps "$SSB_CONF" \
+			--host "$SSB_HOST" --port "$SSB_PORT" \
+			push "$_msg" 2> >( STDERR_DATA="$(cat)"; [[ -z "$STDERR_DATA" ]] || verbose --raw "ssb-rpc [stderr]" "host=$SSB_HOST" "port=$SSB_PORT" "$STDERR_DATA") \
+			| jq -c .
+	fi
+}
+
+_json=$(jq -e . "$OMNIA_CONFIG")
+{
+	importMode "$_json"
+	importOptionsEnv "$_json"
+	importAssetPairsEnv "$_json"
+} >&2
+
+case "$1" in
+	push|publish) publishMsg "$2";;
+	pull) pullLatestFeedMsgOfType "$2" "$3";;
+	*) error "unknown command: $1";exit 1;;
+esac
