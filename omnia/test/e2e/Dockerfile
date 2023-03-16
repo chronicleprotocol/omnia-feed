@@ -1,4 +1,4 @@
-FROM ghcr.io/chronicleprotocol/omnia:dev
+FROM ghcr.io/chronicleprotocol/omnia_feed:dev
 
 USER root
 
@@ -50,10 +50,10 @@ ENV OMNIA_INTERVAL=1 \
 
 ENV GETH_RPC_URL="http://geth.local:8545"
 
-COPY ./test/e2e/bin/transport-e2e /usr/local/bin/
-COPY ./test/e2e/bin/sign-message /usr/local/bin/
+COPY ./omnia/test/e2e/bin/transport-e2e /usr/local/bin/
+COPY ./omnia/test/e2e/bin/sign-message /usr/local/bin/
 # Copy sources
-COPY . /app
+COPY ./omnia /app
 
 WORKDIR /app/test/e2e
 RUN go mod download
