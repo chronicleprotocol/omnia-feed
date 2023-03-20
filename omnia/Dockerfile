@@ -38,8 +38,6 @@ COPY --from=go-builder \
   /go/src/oracle-suite/ssb-rpc-client \
   /usr/local/bin/
 
-RUN pip install --no-cache-dir mpmath sympy ecdsa==0.16.0
-
 COPY ./omnia/bin /opt/omnia/bin/
 COPY ./omnia/exec /opt/omnia/exec/
 COPY ./omnia/lib /opt/omnia/lib/
