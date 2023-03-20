@@ -5,7 +5,6 @@ logs/
 
 .idea/
 .local/
-.vagrant/
 
 # E2E tests requirements
 vendor
