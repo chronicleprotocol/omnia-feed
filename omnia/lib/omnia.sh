@@ -1,7 +1,6 @@
 #initialize environment
 initEnv () {
-	ORACLE_VERSION=${ORACLE_VERSION:-"0.0.0-unknown"}
-	OMNIA_VERSION="$(cat ../version)"
+	OMNIA_VERSION=${OMNIA_VERSION:-"0.0.0-unknown"}
 
 	#Load Global configuration
 	importEnv || exit 1

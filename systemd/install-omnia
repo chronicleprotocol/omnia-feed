@@ -381,10 +381,10 @@ copyTorConfig() {
 
 installConfigs() {
 	copyOmniaConf "feed-ethereum-mainnet.json"
+	copySplitterConf
 	copySsbConf
 	copySpireConf
 	copyTorConfig
-	copySplitterConf
 	copyGoferConf
 	copyLeelooConf
 }
@@ -613,8 +613,6 @@ done
 
 installConfigs
 installServices
-
-"$OMNIA_PATH" info
 
 echo >&2 "To (re)start Omnia now (and auto-start on reboot) run:"
 echo "systemctl daemon-reload # Reload systemd services"
