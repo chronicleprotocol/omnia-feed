@@ -103,7 +103,7 @@ services:
       - gofer
       - spire_feed
       - ssb_server_feed
-    image: ghcr.io/chronicleprotocol/omnia:${DOCKER_IMAGE_VERSION:-latest}
+    image: ghcr.io/chronicleprotocol/omnia_feed:${DOCKER_IMAGE_VERSION:-latest}
     build:
       context: "."
       args:
@@ -135,7 +135,7 @@ services:
       - geth
       - spire_relay
       - ssb_server_relay
-    image: ghcr.io/chronicleprotocol/omnia:${DOCKER_IMAGE_VERSION:-latest}
+    image: ghcr.io/chronicleprotocol/omnia_relay:${DOCKER_IMAGE_VERSION:-latest}
     build:
       context: "."
     volumes:

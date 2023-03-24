@@ -60,8 +60,6 @@ COPY --from=go-builder \
   /go/src/oracle-suite/ssb-rpc-client \
   /usr/local/bin/
 
-RUN printf 'will cite' | parallel --citation 1>/dev/null 2>/dev/null; exit 0
-
 ENV PATH="/opt/dapp/bin:/opt/seth/bin:/opt/setzer/bin:${PATH}"
 
 # Deployment sources

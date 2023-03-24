@@ -1,0 +1,72 @@
+version: '3'
+services:
+  geth:
+    container_name: geth.local
+    build:
+      context: "../omnia"
+      dockerfile: "docker/geth/Dockerfile"
+    ports:
+      - "8545:8545"
+      - "30303:30303"
+    volumes:
+      # - "./omnia/docker/geth/data:/home/geth/data"
+      - "../omnia/docker/geth/config:/home/geth/config"
+      - "../omnia/docker/keystore:/home/geth/keystore"
+    command:
+      - "--datadir=/home/geth/data"
+      - "--keystore=/home/geth/keystore"
+      - "--password=/home/geth/keystore/password"
+      - "--allow-insecure-unlock"
+      - "--unlock=0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6,0xfadad77b3a7e5a84a1f7ded081e785585d4ffaf3,0x3980aa37f838bec2e457445d943feb3af98ff036"
+      - "--networkid=99"
+      - "--lightkdf"
+      - "--nodiscover"
+      - "--maxpeers=0"
+      - "--port=0"
+      - "--nousb"
+      - "--ipcdisable"
+      - "--mine"
+      - "--miner.threads=1"
+      - "--miner.etherbase=0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6"
+      - "--http"
+      - "--http.addr=0.0.0.0"
+      - "--http.port=8545"
+      - "--http.api=admin,personal,eth,miner,debug,txpool,net,web3"
+      - "--http.corsdomain=*"
+      - "--http.vhosts=*"
+      - "--rpc.allow-unprotected-txs"
+#  deployer:
+#    build:
+#      context: ".."
+#      dockerfile: "../docker/deployer/Dockerfile"
+#    volumes:
+#      - "../docker/geth/bin/:/root/bin"
+#    command: ["median-deploy", "BATUSD", "BTCUSD", "ETHUSD", "KNCUSD", "MANAUSD", "0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6", "0x3980aa37f838bec2e457445d943feb3af98ff036"]
+  smocker:
+    image: thiht/smocker
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    container_name: smocker.local
+  omnia_e2e:
+    depends_on:
+      - geth
+      - smocker
+    build:
+      context: ".."
+      dockerfile: "omnia/test/e2e/Dockerfile"
+  omnia_e2e_dev:
+    depends_on:
+      - geth
+      - smocker
+    build:
+      context: ".."
+      dockerfile: "omnia/test/e2e/Dockerfile"
+    volumes:
+      - "../omnia/:/app"
+      - "../omnia/lib:/opt/omnia/lib/"
+      - "../omnia/exec:/opt/omnia/exec"
+      - "../omnia/test/e2e/bin/transport-e2e:/usr/local/bin/transport-e2e"
+      - "../omnia/test/e2e/bin/sign-message:/usr/local/bin/sign-message"
+    command:
+      - "bash"

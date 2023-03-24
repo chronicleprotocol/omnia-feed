@@ -1,0 +1,15 @@
+version: '3'
+services:
+  omnia_unit_tests:
+    image: ghcr.io/chronicleprotocol/omnia_feed:dev
+    volumes:
+      - "../omnia/exec:/opt/omnia/exec"
+      - "../omnia/lib:/home/omnia/lib"
+      - "../omnia/test:/home/omnia/test"
+      - "../omnia/docker/omnia/config/feed.json:/home/omnia/config.json"
+      - "../omnia/docker/spire/config/client_feed.json:/home/omnia/spire.json"
+      - "../omnia/docker/ssb-server/config/feed_config.json:/home/omnia/.ssb/config"
+    environment:
+      OMNIA_CONFIG: /home/omnia/config.json
+      SPIRE_CONFIG: /home/omnia/spire.json
+    command: test/units.sh

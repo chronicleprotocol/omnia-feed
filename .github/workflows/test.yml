@@ -1,0 +1,69 @@
+name: Omnia Tests
+
+on:
+  workflow_dispatch: # Allow manual trigger only. We have manually controll execution phase
+  pull_request:
+    branches:
+      - master
+      - develop
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  unit-test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+
+    env:
+      COMPOSE_FILE: .github/docker-compose-unit-tests.yml
+      DOCKER_BUILDKIT: 1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: PreBuild Omnia images (Used by omnia/tests/e2e/Dockerfile)
+        run: docker build -t ghcr.io/chronicleprotocol/omnia_feed:dev -f omnia/Dockerfile .
+      - name: Run Unit Tests
+        run: docker-compose -f $COMPOSE_FILE run --rm omnia_unit_tests
+
+  test-e2e:
+    name: E2E tests
+    needs: unit-test
+    runs-on: ubuntu-latest
+
+    env:
+      COMPOSE_FILE: .github/docker-compose-e2e-tests.yml
+      DOCKER_BUILDKIT: 1
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: PreBuild Omnia images (Used by omnia/tests/e2e/Dockerfile)
+        run: docker build -t ghcr.io/chronicleprotocol/omnia_feed:dev -f omnia/Dockerfile .
+      - name: Building Omnia e2e image
+        run: docker-compose -f $COMPOSE_FILE build omnia_e2e
+      - name: Running Omnia Feed E2E tests
+        run: docker-compose -f $COMPOSE_FILE run --rm omnia_e2e go test -v -parallel 1 -cpu 1 -p 1 ./feed

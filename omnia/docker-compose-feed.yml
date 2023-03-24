@@ -13,7 +13,7 @@ services:
   omnia:
     depends_on:
       - ssb_server
-    image: ghcr.io/chronicleprotocol/omnia:latest
+    image: ghcr.io/chronicleprotocol/omnia_feed:latest
     volumes:
       - "~/omnia-config/omnia.json:/home/omnia/omnia.json"
 
