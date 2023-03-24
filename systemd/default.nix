@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
   in ''
     mkdir -p $out/{bin,share}
     cp -t $out/bin install-omnia
-    cp -t $out/share *.service *.json *.ini ${omnia}/*.json
+    cp -t $out/share *.service *.json *.ini ${omnia}/config/*.json
 
     wrapProgram "$out/bin/install-omnia" \
       --prefix PATH : "${path}" \
