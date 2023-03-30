@@ -50,8 +50,8 @@ jobs:
       - name: Build and Publish Omnia Base Image to Github Packages
         uses: docker/build-push-action@v3
         with:
-          context: ./omnia
-          file: ./base.Dockerfile
+          context: .
+          file: ./omnia/base.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
