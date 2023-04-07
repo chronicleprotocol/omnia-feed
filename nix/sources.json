@@ -84,15 +84,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "setzer": {
-        "branch": "v0.8.0",
+        "branch": "sc-2131-omnia-feed-v1-15-1",
         "description": null,
         "homepage": "",
         "owner": "chronicleprotocol",
         "repo": "setzer",
-        "rev": "9e70a93e789dd540cd802dde47ad559c28460393",
-        "sha256": "0qjm261m6psyc5i28hlwz0nn1q3z7bvy79pp70xpn6fb112j8dq0",
+        "rev": "fbeb48e4860e27e0ea4c4f53584e970e6c6c97c2",
+        "sha256": "0y7j1kpgipr0yqxkfnqrpfk0msdlcr8abs81kjw6wkdmpkgl7v1y",
         "type": "tarball",
-        "url": "https://github.com/chronicleprotocol/setzer/archive/9e70a93e789dd540cd802dde47ad559c28460393.tar.gz",
+        "url": "https://github.com/chronicleprotocol/setzer/archive/fbeb48e4860e27e0ea4c4f53584e970e6c6c97c2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
