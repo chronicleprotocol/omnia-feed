@@ -1,7 +1,0 @@
-{
-  "spire": {
-    "rpc": {
-      "address": "spire_feed.local:9101"
-    }
-  }
-}
