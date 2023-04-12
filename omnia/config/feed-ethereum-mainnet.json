@@ -16,7 +16,7 @@
     "verbose": true,
     "logFormat": "text"
   },
-  "sources":["gofer","setzer"],
+  "sources":["gofer"],
   "transports":["spire","ssb"],
   "feeds": [
     "0x3CB645a8f10Fb7B0721eaBaE958F77a878441Cb9",
