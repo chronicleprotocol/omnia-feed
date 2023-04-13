@@ -72,7 +72,7 @@ ENV OMNIA_CONFIG=${HOME}/omnia.json \
   ETH_GAS=7000000
 
 COPY ./omnia/config/feed.json ${OMNIA_CONFIG}
-COPY ./omnia/docker/spire/config/client_feed.hcl ${SPIRE_CONFIG}
+COPY ./omnia/docker/spire/config/client.hcl ${SPIRE_CONFIG}
 COPY ./omnia/docker/gofer/client.hcl ${GOFER_CONFIG}
 
 WORKDIR ${HOME}
