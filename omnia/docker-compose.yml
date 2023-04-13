@@ -67,10 +67,6 @@ services:
     image: ghcr.io/chronicleprotocol/gofer:${DOCKER_IMAGE_VERSION:-latest}
     ports:
       - "9200:9200"
-    entrypoint: [ "/usr/local/bin/gofer" ]
-    command: [ "-c", "/etc/gofer.json","-v", "debug", "agent" ]
-    volumes:
-      - "./docker/gofer/agent.json:/etc/gofer.json"
 
   spire_feed:
     image: ghcr.io/chronicleprotocol/spire:${DOCKER_IMAGE_VERSION:-latest}
@@ -78,11 +74,16 @@ services:
     ports:
       - "8101:8101"
       - "9101:9101"
-    entrypoint: [ "/usr/local/bin/spire" ]
-    command: [ "-c", "/etc/spire.json", "agent", "-v", "info" ]
     volumes:
       - "./docker/keystore:/root/keystore"
-      - "./docker/spire/config/agent_feed.json:/etc/spire.json"
+    environment:
+      CFG_ETH_FROM: "0xfadad77b3a7e5a84a1f7ded081e785585d4ffaf3"
+      CFG_ETH_KEYS: "/root/keystore"
+      CFG_ETH_PASS: "/root/keystore/password"
+      CFG_LIBP2P_PK_SEED: "d382e2b16d8a2e770dd8e0b65554a2ce7a072ac67d4ca6f34052771dfdcdac07"
+      CFG_LIBP2P_LISTEN_ADDRS: "/ip4/0.0.0.0/tcp/8101"
+      CFG_SPIRE_RPC_ADDR: "0.0.0.0:9101"
+      CFG_FEEDS: "0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6,0xfadad77b3a7e5a84a1f7ded081e785585d4ffaf3,0x3980aa37f838bec2e457445d943feb3af98ff036"
 
   spire_relay:
     image: ghcr.io/chronicleprotocol/spire:${DOCKER_IMAGE_VERSION:-latest}
@@ -92,11 +93,16 @@ services:
     ports:
       - "8102:8102"
       - "9102:9102"
-    entrypoint: [ "/usr/local/bin/spire" ]
-    command: [ "-c", "/etc/spire.json", "agent", "-v", "info" ]
     volumes:
       - "./docker/keystore:/root/keystore"
-      - "./docker/spire/config/agent_relay.json:/etc/spire.json"
+    environment:
+      CFG_ETH_FROM: "0x3980aa37f838bec2e457445d943feb3af98ff036"
+      CFG_ETH_KEYS: "/root/keystore"
+      CFG_ETH_PASS: "/root/keystore/password"
+      CFG_LIBP2P_LISTEN_ADDRS: "/ip4/0.0.0.0/tcp/8102"
+      CFG_SPIRE_RPC_ADDR: "0.0.0.0:9102"
+      CFG_LIBP2P_BOOTSTRAP_ADDRS: "/dns4/spire_feed.local/tcp/8101/p2p/12D3KooWJ97nwcSoWVQJ7o6BuuBqGtY8xaFbPCptfwo1b2f8cr3o"
+      CFG_FEEDS: "0x1bb90cde8a032cb4963813a5b4db4981afa5b9c6,0xfadad77b3a7e5a84a1f7ded081e785585d4ffaf3,0x3980aa37f838bec2e457445d943feb3af98ff036"
 
   omnia_feed:
     depends_on:
@@ -115,8 +121,8 @@ services:
       - "./test:/opt/omnia/test"
 
       - "./config/feed.json:/home/omnia/omnia.json"
-      - "./docker/spire/config/client_feed.json:/home/omnia/spire.json"
-      - "./docker/gofer/client.json:/home/omnia/gofer.json"
+      - "./docker/spire/config/client.hcl:/home/omnia/spire.hcl"
+      - "./docker/gofer/client.hcl:/home/omnia/gofer.hcl"
 
       - "./docker/keystore/:/home/omnia/.ethereum/keystore/"
       - "./docker/ssb-server/config/feed_config.json:/home/omnia/.ssb/config"
@@ -128,6 +134,10 @@ services:
       SSB_HOST: "ssb-feed.local"
       SSB_PORT: "8000"
       OMNIA_VERBOSE: "true"
+      SPIRE_CONFIG: "/home/omnia/spire.hcl"
+      CFG_SPIRE_RPC_ADDR: "spire_feed.local:9101"
+      GOFER_CONFIG: "/home/omnia/gofer.hcl"
+      CFG_GOFER_RPC_ADDR: "gofer.local:9200"
 #      OMNIA_LOG_FORMAT: "json"
 
   omnia_relay:
@@ -147,7 +157,7 @@ services:
       - "../dapptools/src/seth/:/opt/seth/"
 
       - "./config/relay.json:/home/omnia/omnia.json"
-      - "./docker/spire/config/client_relay.json:/home/omnia/spire.json"
+      - "./docker/spire/config/client.hcl:/home/omnia/spire.hcl"
 
       - "./docker/keystore/:/home/omnia/.ethereum/keystore/"
       - "./docker/ssb-server/config/relay_config.json:/home/omnia/.ssb/config"
@@ -163,6 +173,8 @@ services:
       SSB_HOST: "ssb-relay.local"
       SSB_PORT: "8000"
       OMNIA_VERBOSE: "true"
+      SPIRE_CONFIG: "/home/omnia/spire.hcl"
+      CFG_SPIRE_RPC_ADDR: "spire_feed.local:9102"
 #      OMNIA_LOG_FORMAT: "json"
 networks:
   default:
