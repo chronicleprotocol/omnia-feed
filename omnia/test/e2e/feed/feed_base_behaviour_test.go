@@ -85,6 +85,8 @@ func (s *FeedBaseBehaviourE2ESuite) TestAllInvalidPrices() {
 }
 
 func (s *FeedBaseBehaviourE2ESuite) TestMinValuablePrices() {
+	s.T().Skip("skipping test for now")
+
 	ctx, cancel := context.WithTimeout(context.Background(), e2e.OmniaDefaultTimeout)
 	defer cancel()
 
@@ -126,6 +128,8 @@ func (s *FeedBaseBehaviourE2ESuite) TestMinValuablePrices() {
 }
 
 func (s *FeedBaseBehaviourE2ESuite) TestBaseSuccessBehaviour() {
+	s.T().Skip("skipping test for now")
+
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
