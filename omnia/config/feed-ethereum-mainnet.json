@@ -16,7 +16,7 @@
     "verbose": true,
     "logFormat": "text"
   },
-  "sources":["gofer","setzer"],
+  "sources":["gofer"],
   "transports":["spire","ssb"],
   "feeds": [
     "0x3CB645a8f10Fb7B0721eaBaE958F77a878441Cb9",
@@ -49,11 +49,10 @@
     "ETH/BTC":{"msgExpiration":1800,"msgSpread":0.5},
     "ETH/USD":{"msgExpiration":1800,"msgSpread":0.5},
     "GNO/USD":{"msgExpiration":1800,"msgSpread":0.5},
-    "IBTA/USD":{"msgExpiration":1800,"msgSpread":0.5},
+    "IBTA/USD":{"msgExpiration":3600,"msgSpread":1},
     "LINK/USD":{"msgExpiration":1800,"msgSpread":0.5},
     "MANA/USD":{"msgExpiration":1800,"msgSpread":0.5},
     "MATIC/USD":{"msgExpiration":1800,"msgSpread":0.5},
-    "MKR/ETH":{"msgExpiration":1800,"msgSpread":0.5},
     "MKR/USD":{"msgExpiration":1800,"msgSpread":0.5},
     "RETH/USD":{"msgExpiration":1800,"msgSpread":0.5},
     "WSTETH/USD":{"msgExpiration":1800,"msgSpread":0.5},
