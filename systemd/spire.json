@@ -9,7 +9,7 @@
     "webapi": {
       "listenAddr": "127.0.0.1:0",
       "socks5ProxyAddr": "127.0.0.1:9050",
-      "addressBookType": "ethereum",
+      "addressBookType": ["ethereum","static"],
       "ethereumAddressBook": {
         "addressBookAddr": "0xd51Fd30C873356b432F766eB55fc599586734a95",
         "ethereum": {
@@ -17,7 +17,7 @@
         }
       },
       "staticAddressBook": {
-        "remoteAddrs": []
+        "remoteAddrs": ["http://bw7blxrzq526zdxvrvsknas6evzkd57tfwru7rgzh2eot3kcqk4cn7yd.onion:8888"]
       }
     },
     "libp2p": {
