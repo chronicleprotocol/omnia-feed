@@ -13,9 +13,9 @@ RUN [[ "$TARGETARCH" = "arm64" ]] && echo "export CFLAGS=-mno-outline-atomics" >
 
 WORKDIR /opt/foundry
 
-ARG CAST_REF="master"
+ARG CAST_REF="cb925b1"
 RUN git clone https://github.com/foundry-rs/foundry.git . \
-  && git checkout --quiet ${CAST_REF} 
+  && git checkout --quiet ${CAST_REF}
 
 RUN source $HOME/.profile && cargo build --release --bin cast \
   && strip /opt/foundry/target/release/cast
